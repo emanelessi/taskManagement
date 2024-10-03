@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string("name")->unique();
             $table->enum('status', ['enable', 'disable'])->default('enable');
-            $table->dateTime('due_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

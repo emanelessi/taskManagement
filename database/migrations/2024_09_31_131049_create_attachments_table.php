@@ -13,10 +13,11 @@ return new class extends Migration
     {
         Schema::create('attachments', function (Blueprint $table) {
             $table->id();
-            $table->string("file_path");
+            $table->string('file_path');
             $table->foreignId('task_id')->nullable()->constrained('tasks')->nullOnDelete();
             $table->foreignId('uploaded_by')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -16,7 +16,6 @@ return new class extends Migration
             $table->text("comment");
             $table->foreignId('task_id')->nullable()->constrained('tasks')->nullOnDelete();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->dateTime('due_date')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

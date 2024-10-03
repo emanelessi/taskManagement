@@ -18,9 +18,10 @@ return new class extends Migration
             $table->dateTime('due_date')->nullable();
             $table->enum('priority', ['Low', 'Medium', 'High'])->default('Medium');
             $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
-            $table->foreignId('state_id')->nullable()->constrained('status')->nullOnDelete();
+            $table->foreignId('state_id')->nullable()->constrained('statuses')->nullOnDelete();
             $table->foreignId('assigned_to')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('project_id')->nullable()->constrained('projects')->nullOnDelete();
+            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
