@@ -15,8 +15,25 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+
+Route::get('/tasks', function () {
+    return view('tasks');
+})->name('tasks');
+Route::get('/categories', function () {
+    return view('categories');
+})->name('categories');
+Route::get('/status', function () {
+    return view('status');
+})->name('status');
+Route::get('/projects', function () {
+    return view('projects');
+})->name('projects');
+Route::get('/reports', function () {
+    return view('reports');
+})->name('reports');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
