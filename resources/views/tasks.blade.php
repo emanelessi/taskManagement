@@ -18,7 +18,7 @@
                         </div>
 
                         <div class="flex space-x-2 px-2 ">
-                            <img src="../image/icon/dots.svg" alt="dots" width="20"/>
+                            <img src="{{ asset('image/icon/dots.svg') }}" alt="dots" width="20"/>
                             <!--                            <img src="../image/icon/add.svg" alt="add" @click="showAddCategory = true" />-->
 
                         </div>
