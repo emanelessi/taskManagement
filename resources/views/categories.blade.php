@@ -27,12 +27,18 @@
 
             @php
                 $headers = ['Category Name', 'Status', 'ADD Date', 'Actions'];
-                $rows = [
-                    ['Category A', 'Enable', '2024-09-30', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditCategory = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>'],
-                    ['Category B', 'Disable', '2024-10-15', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditCategory = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>'],
-                    ['Category A', 'Enable', '2024-09-30', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditCategory = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>'],
-                    ['Category B', 'Disable', '2024-10-15', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditCategory = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>'],
-                ];
+                $rows = [];
+                foreach ($categories as $category) {
+                    $rows[] = [
+                        $category->name,
+                        $category->status,
+                        \Carbon\Carbon::parse($category->created_at)->format('Y-m-d'),
+                        '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditCategory = true">Edit</a>
+
+                         <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>
+                          ',
+                    ];
+                }
             @endphp
 
             <x-static-table :headers="$headers" :rows="$rows"/>

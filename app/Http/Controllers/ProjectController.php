@@ -12,7 +12,10 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+       $projects=Project::with(['status','user'])->get();
+        return view('projects', ['projects' => $projects]);
+
+
     }
 
     /**
@@ -34,9 +37,10 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Project $project)
+    public function show($id)
     {
-        //
+        $project = Project::with('status', 'user')->findOrFail($id);
+        return view('projectDetails', ['project' => $project]);
     }
 
     /**

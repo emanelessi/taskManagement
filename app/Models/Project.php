@@ -17,12 +17,12 @@ class Project extends Model
 
     public function user()
     {
-        $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function status()
     {
-        $this->belongsTo(Status::class);
+        return $this->belongsTo(Status::class, 'state_id');
     }
 
     public function tasks()

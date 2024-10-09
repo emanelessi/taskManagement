@@ -16,8 +16,8 @@
                     @if ($key === 1)
                     <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full
-                                    @if ($cell == 'Enable'|| $cell == 'Completed') bg-green-100 text-green-800
-                                    @elseif ($cell == 'Disable'|| $cell == 'cancelled'|| $cell == 'Overdue') bg-red-100 text-red-800
+                                    @if ($cell == 'enable'|| $cell == 'Completed') bg-green-100 text-green-800
+                                    @elseif ($cell == 'disable'|| $cell == 'cancelled'|| $cell == 'Overdue') bg-red-100 text-red-800
                                     @else bg-yellow-100 text-yellow-800 @endif">
                                     {{ $cell }}
                                 </span>
@@ -28,7 +28,7 @@
                     </td>
                     @else
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-black/80">{{ $cell }}</div>
+                            <div class="text-sm font-medium text-black/80">   {!! $cell !!}</div>
                         </td>
                     @endif
                 @endforeach

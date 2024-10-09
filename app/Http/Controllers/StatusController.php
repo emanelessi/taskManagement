@@ -12,7 +12,9 @@ class StatusController extends Controller
      */
     public function index()
     {
-        //
+        $statuses=Status::get();
+        return view('status', ['statuses' => $statuses]);
+
     }
 
     /**

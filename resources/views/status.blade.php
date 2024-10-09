@@ -26,12 +26,17 @@
 
             @php
                 $headers = ['Status Name', 'Status', 'ADD Date', 'Actions'];
-                $rows = [
-                    ['Status A', 'Enable', '2024-09-30', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditStatus = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteStatus = true">Delete</a>'],
-                    ['Status B', 'Disable', '2024-10-15', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditStatus = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteStatus = true">Delete</a>'],
-                    ['Status A', 'Enable', '2024-09-30', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditStatus = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteStatus = true">Delete</a>'],
-                    ['Status B', 'Disable', '2024-10-15', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditStatus = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteStatus = true">Delete</a>'],
-                ];
+                $rows = [];
+                foreach ($statuses as $status) {
+                    $rows[] = [
+                        $status->name,
+                        $status->status,
+                        \Carbon\Carbon::parse($status->created_at)->format('Y-m-d'),
+                        '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditStatus = true">Edit</a>
+                         <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteStatus = true">Delete</a>
+                          ',
+                    ];
+                }
             @endphp
 
             <x-static-table :headers="$headers" :rows="$rows"/>

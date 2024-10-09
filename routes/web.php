@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\StatusController;
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,12 +27,12 @@ Route::get('/tasks', function () {
 Route::get('/categories', function () {
     return view('categories');
 })->name('categories');
-Route::get('/status', function () {
-    return view('status');
-})->name('status');
-Route::get('/projects', function () {
-    return view('projects');
-})->name('projects');
+
+Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+Route::get('/status', [StatusController::class, 'index'])->name('status');
+Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
+Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projects.details');
+
 Route::get('/reports', function () {
     return view('reports');
 })->name('reports');

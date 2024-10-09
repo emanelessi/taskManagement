@@ -22,13 +22,22 @@
         <div class="overflow-x-auto bg-white shadow-md rounded-lg"
              x-data="{ showEditProject: false, showDeleteProject: false}">
             @php
-                $headers = ['Project Name', 'Status', 'ADD Date','Cost', 'Actions'];
-                $rows = [
-                    ['Project A', 'Completed', '2024-09-30','50000$', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditProject = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteProject = true">Delete</a>'],
-                    ['Project B', 'In Progress', '2024-10-15', '50000$','<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditProject = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteProject = true">Delete</a>'],
-                    ['Project A', 'Completed', '2024-09-30', '50000$','<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditProject = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteProject = true">Delete</a>'],
-                    ['Project B', 'Overdue', '2024-10-15','50000$', '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditProject = true">Edit</a> <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteProject = true">Delete</a>'],
-                ];
+                $headers = ['Project Name', 'Status', 'Start Date','deadline', 'Cost',
+                  'Created By', 'Actions'];
+                $rows = [];
+                foreach ($projects as $project) {
+                    $rows[] = [
+                        ' <a href="' . route('projects.details', $project->id) . '" class="text-blue-600 hover:underline">' . $project->name . '</a>',
+                        $project->status->name ?? null,
+                        \Carbon\Carbon::parse($project->start_date)->format('Y-m-d'),
+                        \Carbon\Carbon::parse($project->deadline)->format('Y-m-d'),
+                        $project->cost,
+                        $project->user->name,
+                        '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditProject = true">Edit</a>
+                         <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteProject = true">Delete</a>
+                          ',
+                    ];
+                }
             @endphp
             <x-static-table :headers="$headers" :rows="$rows"/>
             <div x-show="showEditProject" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -67,7 +76,8 @@
                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  my-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
-                    <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold" x-text="selectedCategory.name"></span>?
+                    <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"
+                                                                                         x-text="selectedCategory.name"></span>?
                     </x-input-label>
                     <div class="flex justify-end gap-2">
                         <x-primary-button @click="showDeleteProject = false">Cancel</x-primary-button>
