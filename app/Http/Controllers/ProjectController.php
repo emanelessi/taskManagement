@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
+use App\Models\Status;
 use Illuminate\Http\Request;
 
 class ProjectController extends Controller
@@ -12,10 +14,9 @@ class ProjectController extends Controller
      */
     public function index()
     {
-       $projects=Project::with(['status','user'])->get();
-        return view('projects', ['projects' => $projects]);
-
-
+        $projects=Project::with(['status','user'])->get();
+        $status = Status::all();
+        return view('projects.index', ['projects' => $projects, 'status' => $status]);
     }
 
     /**
@@ -23,7 +24,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
@@ -31,8 +32,20 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        try {
+            Project::create([
+                'name' => $request->name,
+                'description' => $request->description,
+                'status_id' => $request->status,
+                'start_date' => $request->start_date,
+                'deadline' => $request->deadline,
+                'cost' => $request->cost,
+                'created_by' => $request->user()->id,
+            ]);
+            return redirect()->route('projects')->with('success', 'Project added successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }  }
 
     /**
      * Display the specified resource.
@@ -40,7 +53,7 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::with('status', 'user')->findOrFail($id);
-        return view('projectDetails', ['project' => $project]);
+        return view('projects.projectDetails', ['project' => $project]);
     }
 
     /**

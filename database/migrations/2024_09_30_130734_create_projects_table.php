@@ -19,7 +19,7 @@ return new class extends Migration
             $table->dateTime('start_date')->nullable();
             $table->dateTime('deadline')->nullable();
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('state_id')->nullable()->constrained('statuses')->nullOnDelete();
+            $table->foreignId('status_id')->nullable()->constrained('statuses')->nullOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });

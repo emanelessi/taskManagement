@@ -34,9 +34,7 @@
                         $category->status,
                         \Carbon\Carbon::parse($category->created_at)->format('Y-m-d'),
                         '<a href="#" class="text-tertiary hover:text-tertiary"  @click="showEditCategory = true">Edit</a>
-
-                         <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>
-                          ',
+                         <a href="#" class="text-red-600 hover:text-red-900 ml-4" @click="showDeleteCategory = true">Delete</a>',
                     ];
                 }
             @endphp

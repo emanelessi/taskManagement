@@ -22,7 +22,7 @@ class Project extends Model
 
     public function status()
     {
-        return $this->belongsTo(Status::class, 'state_id');
+        return $this->belongsTo(Status::class, 'status_id');
     }
 
     public function tasks()

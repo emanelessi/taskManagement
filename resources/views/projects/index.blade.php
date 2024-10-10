@@ -28,7 +28,7 @@
                 foreach ($projects as $project) {
                     $rows[] = [
                         ' <a href="' . route('projects.details', $project->id) . '" class="text-blue-600 hover:underline">' . $project->name . '</a>',
-                        $project->status->name ?? null,
+                        $project->status->name,
                         \Carbon\Carbon::parse($project->start_date)->format('Y-m-d'),
                         \Carbon\Carbon::parse($project->deadline)->format('Y-m-d'),
                         $project->cost,
@@ -40,7 +40,9 @@
                 }
             @endphp
             <x-static-table :headers="$headers" :rows="$rows"/>
-            <div x-show="showEditProject" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+
+            <form x-show="showEditProject" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+              @csrf
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12  w-8/12 my-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Project</h2>
                     <div class="mb-4">
@@ -71,7 +73,7 @@
                         <x-primary-button @click="addProject">addProject</x-primary-button>
                     </div>
                 </div>
-            </div>
+            </form>
             <div x-show="showDeleteProject"
                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  my-14 z-30">
@@ -85,37 +87,47 @@
                     </div>
                 </div>
             </div>
-            <div x-show="showAddProject" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+
+            <form x-show="showAddProject"  method="POST" action="{{ route('projects.store') }}" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                @csrf
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 my-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Project</h2>
                     <div class="mb-4">
                         <x-input-label>Project Name:</x-input-label>
-                        <x-text-input class="w-full " type="text"></x-text-input>
+                        <x-text-input class="w-full" type="text" name="name" required></x-text-input>
                     </div>
                     <div class="mb-4">
-                        <label class="block text-black/70">Status:</label>
-                        <select x-model="newProject.status"
-                                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                        <x-input-label>Status:</x-input-label>
+                        <select name="status" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                             <option value="">Select status</option>
-                            <option value="Completed">Completed</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Overdue">Overdue</option>
+                            @foreach($status as $statu)
+                                <option value="{{ $statu->id }}">{{ $statu->name }}</option>
+                            @endforeach
                         </select>
                     </div>
                     <div class="mb-4">
                         <x-input-label>Due Date:</x-input-label>
-                        <x-text-input class="w-full " type="date"></x-text-input>
+                        <x-text-input class="w-full" type="date" name="deadline" required></x-text-input>
+                    </div>
+                    <div class="mb-4">
+                        <x-input-label>Start Date:</x-input-label>
+                        <x-text-input class="w-full" type="date" name="start_date" required></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>Cost:</x-input-label>
-                        <x-text-input class="w-full " type="number"></x-text-input>
+                        <x-text-input class="w-full" type="number" name="cost" required></x-text-input>
+                    </div>
+                    <div class="mb-4">
+                        <x-input-label>Description:</x-input-label>
+                        <textarea type="text"  name="description" required
+                                  class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
                     </div>
                     <div class="flex justify-end gap-4">
                         <x-danger-button @click="showAddProject = false">Cancel</x-danger-button>
-                        <x-primary-button @click="addProject">Add Project</x-primary-button>
+                        <x-primary-button type="submit">Add Project</x-primary-button>
                     </div>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </x-app-layout>

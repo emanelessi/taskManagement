@@ -28,10 +28,6 @@ Route::get('/categories', function () {
     return view('categories');
 })->name('categories');
 
-Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
-Route::get('/status', [StatusController::class, 'index'])->name('status');
-Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
-Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projects.details');
 
 Route::get('/reports', function () {
     return view('reports');
@@ -46,6 +42,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
+    Route::get('/status', [StatusController::class, 'index'])->name('status');
+    Route::post('/projects', [ProjectController::class, 'store'])->name('projects.store');
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
+    Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projects.details');
 });
 
 require __DIR__.'/auth.php';
