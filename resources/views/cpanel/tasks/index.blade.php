@@ -1,46 +1,34 @@
 <x-app-layout>
     <div class="flex-col  w-full  overflow-auto scrollbar-thin">
-
+        <x-alert type="success" :message="session('success')"/>
+        <x-alert type="error" :errors="$errors->all()"/>
         <!--        <div class="md:flex  my-4 space-x-4">-->
         <!--            <input type="text" id="taskName" placeholder="Add Task"-->
         <!--                   class="text-sm p-3 border border-secondary  bg-primary rounded-md ">-->
         <!--            <input type="date" id="dueDate" class="text-sm p-3 border border-secondary bg-primary rounded-md ">-->
-        <!--            <button @click="addTask" class="bg-tertiary text-white p-2 rounded">Add Task</button>-->
+        <!--            <button  class="bg-tertiary text-white p-2 rounded">Add Task</button>-->
         <!--        </div>-->
+{{--        @foreach($tasks as $task)--}}
+{{--            <p class="font-semibold text-tertiary">{{ $task->project->name ?? 'Project Name' }}</p>--}}
 
-        <div class="md:flex  my-4 w-full"
-             x-data="{ sidebarOpen: false, profileMenuOpen: false, showAddTask: false, showEditTask: false, showDeleteTask: false, showAddCategory: false }">
+{{--        @endforeach--}}
+
+        <div class="md:flex  my-4 w-full">
             <div id="task-board" class="md:flex justify-between w-full space-x-4">
-                <div class="md:w-1/4 w-full task-group ">
-                    <x-task-board :backlogCount="0" :toDoCount="0" :tasks="0"/>
 
-                </div>
-                <div class="md:w-1/4 w-full task-group">
-                    <x-task-board :backlogCount="0" :toDoCount="0" :tasks="0"/>
-
-                </div>
-                <div class="md:w-1/4 w-full ">
-                    <x-task-board :backlogCount="0" :toDoCount="0" :tasks="0"/>
-                </div>
-                <div class="md:w-1/4 w-full  ">
-                    <x-task-board :backlogCount="0" :toDoCount="0" :tasks="0"/>
-
-                </div>
-                <div class="md:w-1/4 w-full ">
+                <x-task-board :backlogCount="0" :toDoCount="0" :tasks="$tasks ?? []"/>
+                <div class="lg:w-2/4 w-full ">
                     <div class="flex justify-between bg-white p-4 rounded-lg">
                         <div class="flex space-x-2 px-2 ">
                             <h2 class="text-md font-bold">ADD MORE TOPIC</h2>
                         </div>
-
                         <div class="flex space-x-2 px-2 ">
-                            <!--                            <img src="../image/icon/dots.svg" alt="dots" width="20"/>-->
-                            <img src="../image/icon/add.svg" alt="add" @click="showAddCategory = true"/>
-
+                            <img src="../image/icon/add.svg" alt="add"/>
                         </div>
                     </div>
                     <div class="mt-2">
                         <div class=" p-3 rounded-lg shadow mb-2">
-                            <svg @click="showAddTask = true" width="250" height="15"
+                            <svg width="250" height="15"
                                  class="flex justify-center items-center mx-auto"
                                  viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -51,11 +39,8 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
-
-            <div x-show="showAddTask"
+            <div id="addTaskModal" style="display: none;"
                  class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  mt-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Task</h2>
@@ -73,8 +58,8 @@
                     </div>
                     <div class="mb-4">
                         <x-input-label>Status:</x-input-label>
-                        <select x-model="newProject.status"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                        <select
+                            class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                             <option value="">Select status</option>
                             <option value="Completed">Completed</option>
                             <option value="In Progress">In Progress</option>
@@ -87,7 +72,7 @@
                     </div>
                     <div class="mb-4">
                         <x-input-label>Description:</x-input-label>
-                        <textarea type="text" x-model="newProject.team"
+                        <textarea type="text"
                                   class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
                     </div>
                     <div class="mb-4">
@@ -95,12 +80,12 @@
                         <x-text-input class="w-full " type="file"></x-text-input>
                     </div>
                     <div class="flex justify-end">
-                        <x-danger-button @click="showAddTask = false">Cancel</x-danger-button>
-                        <x-primary-button @click="addTask">Add Task</x-primary-button>
+                        <x-danger-button>Cancel</x-danger-button>
+                        <x-primary-button>Add Task</x-primary-button>
                     </div>
                 </div>
             </div>
-            <div x-show="showEditTask"
+            <div id="editTaskModal" style="display: none;"
                  class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12   mt-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Task</h2>
@@ -118,8 +103,8 @@
                     </div>
                     <div class="mb-4">
                         <x-input-label>Status:</x-input-label>
-                        <select x-model="newProject.status"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                        <select
+                            class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                             <option value="">Select status</option>
                             <option value="Completed">Completed</option>
                             <option value="In Progress">In Progress</option>
@@ -132,7 +117,7 @@
                     </div>
                     <div class="mb-4">
                         <x-input-label>Description:</x-input-label>
-                        <textarea type="text" x-model="newProject.team"
+                        <textarea type="text"
                                   class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
                     </div>
                     <div class="mb-4">
@@ -140,25 +125,24 @@
                         <x-text-input class="w-full " type="file"></x-text-input>
                     </div>
                     <div class="flex justify-end">
-                        <x-danger-button @click="showEditTask = false">Cancel</x-danger-button>
-                        <x-primary-button @click="editTask">Edit Task</x-primary-button>
+                        <x-danger-button>Cancel</x-danger-button>
+                        <x-primary-button>Edit Task</x-primary-button>
                     </div>
                 </div>
             </div>
-            <div x-show="showDeleteTask" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div id="deleteTaskModal" style="display: none;"
+                 class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  my-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
-                    <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"
-                                                                                         x-text="selectedCategory.name"></span>?
+                    <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"></span>?
                     </x-input-label>
                     <div class="flex justify-end">
-                        <x-primary-button @click="showDeleteTask = false">Cancel</x-primary-button>
-                        <x-danger-button @click="confirmDelete">Delete</x-danger-button>
+                        <x-primary-button>Cancel</x-primary-button>
+                        <x-danger-button>Delete</x-danger-button>
                     </div>
                 </div>
             </div>
-
-            <div x-show="showAddCategory"
+            <div id="addCategoryModal" style="display: none;"
                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 my-14 z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Category</h2>
@@ -168,8 +152,8 @@
                     </div>
                     <div class="mb-4">
                         <x-input-label>Status:</x-input-label>
-                        <select x-model="newProject.status"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                        <select
+                            class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                             <option value="">Select status</option>
                             <option value="Completed">Completed</option>
                             <option value="In Progress">In Progress</option>
@@ -182,8 +166,8 @@
                     </div>
 
                     <div class="flex justify-end gap-4">
-                        <x-danger-button @click="showAddCategory = false">Cancel</x-danger-button>
-                        <x-primary-button @click="addCategory">Add Category</x-primary-button>
+                        <x-danger-button>Cancel</x-danger-button>
+                        <x-primary-button>Add Category</x-primary-button>
 
                     </div>
                 </div>
@@ -191,4 +175,62 @@
 
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            <!--start storing models in variables -->
+            const addTaskModal = document.getElementById('addTaskModal');
+            const editTaskModal = document.getElementById('editTaskModal');
+            const deleteTaskModal = document.getElementById('deleteTaskModal');
+            const addCategoryModal = document.getElementById('addCategoryModal');
+            <!--end storing models in variables -->
+
+            {{--<!--start open and close the model -->--}}
+            {{--document.getElementById('addCategoryBtn').addEventListener('click', () => {--}}
+            {{--    addCategoryModal.classList.remove('hidden');--}}
+            {{--});--}}
+
+            {{--document.getElementById('cancelAddCategory').addEventListener('click', () => {--}}
+            {{--    addCategoryModal.classList.add('hidden');--}}
+            {{--});--}}
+
+            {{--document.getElementById('cancelEditCategory').addEventListener('click', () => {--}}
+            {{--    editCategoryModal.style.display = 'none';--}}
+            {{--});--}}
+            {{--<!--end open and close the model -->--}}
+
+            {{--<!--start storing data in the model -->--}}
+            {{--document.querySelectorAll('.edit-category').forEach(editButton => {--}}
+            {{--    editButton.addEventListener('click', function () {--}}
+            {{--        const categoryId = this.dataset.id;--}}
+            {{--        const categoryName = this.dataset.name;--}}
+            {{--        const categoryStatus = this.dataset.status;--}}
+
+            {{--        document.querySelector('input[name="name"]').value = categoryName;--}}
+            {{--        document.querySelector('select[name="status"]').value = categoryStatus;--}}
+
+
+            {{--        editCategoryModal.setAttribute('action', `{{ route('categories.update', '') }}/${categoryId}`);--}}
+            {{--        editCategoryModal.style.display = 'flex';--}}
+            {{--    });--}}
+            {{--});--}}
+            {{--<!--end storing data in the model -->--}}
+
+            {{--<!--start process  in the delete model -->--}}
+            {{--document.getElementById('cancelDeleteCategory').addEventListener('click', () => {--}}
+            {{--    deleteCategoryModal.style.display = 'none';--}}
+            {{--});--}}
+
+            {{--document.querySelectorAll('.delete-category').forEach(deleteButton => {--}}
+            {{--    deleteButton.addEventListener('click', function () {--}}
+            {{--        const categoryId = this.dataset.id;--}}
+            {{--        document.getElementById('category_id').value = categoryId;--}}
+            {{--        deleteCategoryModal.action = `{{ route('categories.destroy', '') }}/${categoryId}`;--}}
+            {{--        deleteCategoryModal.style.display = 'flex';--}}
+            {{--    });--}}
+            {{--});--}}
+            {{--<!--end process  in the delete model -->--}}
+
+        });
+
+    </script>
 </x-app-layout>

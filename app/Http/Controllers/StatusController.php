@@ -12,17 +12,9 @@ class StatusController extends Controller
      */
     public function index()
     {
-        $statuses=Status::get();
-        return view('status', ['statuses' => $statuses]);
+        $statuses = Status::get();
+        return view('cpanel.status.index', ['statuses' => $statuses]);
 
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -30,23 +22,19 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $request->validate([
+            'name' => 'required|string|max:255|unique:statuses,name',
+            'status' => 'required|string|in:enable,disable',
+        ], [
+            'name.unique' => 'The Status name already exists. Please choose another name.',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Status $status)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Status $status)
-    {
-        //
+        try {
+            Status::create($request->only(['name', 'status']));
+            return redirect()->route('status')->with('success', 'Status added successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -54,14 +42,31 @@ class StatusController extends Controller
      */
     public function update(Request $request, Status $status)
     {
-        //
+        // Validate the request data
+        $request->validate([
+            'name' => 'required|string|max:255|unique:statuses,name,' . $status->id,
+            'status' => 'required|string|in:enable,disable',
+        ]);
+
+        try {
+            $status->update($request->only(['name', 'status']));
+            return redirect()->route('status')->with('success', 'Status updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Status $status)
+    public function destroy($id)
     {
-        //
+        try {
+            $status = Status::findOrFail($id);
+            $status->delete();
+            return redirect()->route('status')->with('success', 'Status deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 }

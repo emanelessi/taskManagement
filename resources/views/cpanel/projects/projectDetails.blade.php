@@ -1,5 +1,7 @@
 <x-app-layout>
     <div class="flex-1 overflow-auto">
+        <x-alert type="success" :message="session('success')" />
+        <x-alert type="error" :errors="$errors->all()" />
         <div class="bg-white shadow-lg rounded-lg p-8">
             <!-- Section with Background -->
             <div class="bg-gradient-to-r from-tertiary/40 to-tertiary/10 p-6 rounded-lg mb-6 shadow-inner">

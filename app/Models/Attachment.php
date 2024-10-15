@@ -21,6 +21,6 @@ class Attachment extends Model
 
     public function task()
     {
-        $this->belongsTo(Task::class);
+        return $this->belongsTo(Task::class);
     }
 }

@@ -11,7 +11,8 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Status extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    protected $guarded = [];
 
     public function tasks()
     {

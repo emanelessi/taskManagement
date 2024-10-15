@@ -12,17 +12,8 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::get();
-        return view('categories', ['categories' => $categories]);
-
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $categories = Category::all();
+        return view('cpanel.categories.index', compact('categories'));
     }
 
     /**
@@ -30,23 +21,21 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        // Validate the request data
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name',
+            'status' => 'required|string|in:enable,disable',
+        ], [
+            'name.unique' => 'The category name already exists. Please choose another name.',
+        ]);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Category $category)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Category $category)
-    {
-        //
+        try {
+            // Create a new category
+            Category::create($request->only(['name', 'status']));
+            return redirect()->route('categories')->with('success', 'Category added successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -54,14 +43,32 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        // Validate the request data
+        $request->validate([
+            'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
+            'status' => 'required|string|in:enable,disable',
+        ]);
+
+        try {
+            // Update the category
+            $category->update($request->only(['name', 'status']));
+            return redirect()->route('categories')->with('success', 'Category updated successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Category $category)
+    public function destroy($id)
     {
-        //
+        try {
+            $category = Category::findOrFail($id);
+            $category->delete();
+            return redirect()->route('categories')->with('success', 'Category deleted successfully!');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 }

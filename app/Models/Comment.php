@@ -17,6 +17,11 @@ class Comment extends Model
 
     public function task()
     {
-        $this->belongsTo(Task::class);
+        return $this->belongsTo(Task::class);
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
 }
