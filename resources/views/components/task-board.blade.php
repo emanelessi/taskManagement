@@ -14,8 +14,18 @@
                 <div class="flex justify-between my-3">
                     <h3 class="font-semibold bg-tertiary/30 w-1/2  flex items-center justify-center rounded-md"> {{ $task->priority ?? 'NON' }}</h3>
                     <div class="flex space-x-2 px-2 ">
-                        <img src="../image/icon/delete.svg" alt="delete" width="15"/>
-                        <img src="../image/icon/edit.svg" alt="edit" width="20"/>
+                        <img src="{{ asset('image/icon/delete.svg') }}" alt="delete" width="15"  class="deleteTask"   data-id="{{ $task->id }}"/>
+                        <img src="{{ asset('image/icon/edit.svg') }}" alt="edit" width="20" class="editTask"
+                             data-id="{{ $task->id }}"
+                             data-title="{{ $task->title }}"
+                             data-description="{{ $task->description }}"
+                             data-due-date="{{ $task->due_date }}"
+                             data-priority="{{ $task->priority }}"
+                             data-category-id="{{ $task->category_id }}"
+                             data-status-id="{{ $task->status_id }}"
+                             data-project-id="{{ $task->project_id }}"
+                             data-completed-at="{{ $task->completed_at }}"/>
+
                     </div>
                 </div>
                 @foreach($task->attachments as $attachment)
@@ -29,11 +39,12 @@
                 <a href="{{ route('tasks.details', $task->id) }}" >
                   <p class="font-bold m-4 text-tertiary hover:underline">{{ $task->title ?? 'Task Title' }}</p>
                 </a>
-                <p class="m-4">{{ $task->description ?? 'Task Description' }}</p>
+                <p class="m-4  break-words"> {{ Str::limit($task->description, 50)?? 'Task Description' }}</p>
+
             </div>
         </div>
         <div class="mt-2  ">
-            <div class="p-3 rounded-lg shadow mb-2">
+            <div class="p-3 rounded-lg shadow mb-2 addTaskBtn">
                 <svg width="250" height="15"
                      class="flex justify-center items-center mx-auto"
                      viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -49,7 +49,7 @@
             </div>
 
             <!-- Back Button -->
-            <div class="flex justify-end mt-6">
+            <div class="flex justify-end mt-6 gap-4">
                 <x-primary-button onclick="window.history.back()">Back</x-primary-button>
             </div>
         </div>

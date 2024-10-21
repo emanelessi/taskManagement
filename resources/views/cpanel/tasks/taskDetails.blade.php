@@ -5,7 +5,7 @@
         <x-alert type="error" :errors="$errors->all()"/>
 
         <div class="bg-white shadow-lg rounded-lg p-8">
-            <div class="grid my-5 gap-6">
+            <div class="grid mb-5 gap-6">
                 <!-- Task Name -->
                 <div class="flex items-center gap-2">
                     <p class="text-tertiary font-bold text-lg">Task Name:</p>
@@ -14,7 +14,7 @@
 
             </div>
             <!-- Section with Background -->
-            <div class="bg-gradient-to-r from-tertiary/30 to-tertiary/10 p-6 rounded-lg mb-6 shadow-inner">
+            <div class="bg-gradient-to-r from-quaternary/30 to-tertiary/10 p-6 rounded-lg mb-6 shadow-inner">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Project -->
                     <div class="flex items-center gap-2">
@@ -99,7 +99,7 @@
                                   class="w-full px-3 py-2 text-black border border-gray-300 rounded-lg"
                                   required></textarea>
                     </div>
-                    <div class="flex justify-end">
+                    <div class="flex justify-end  gap-4">
                         <x-primary-button type="submit">Submit Comment</x-primary-button>
                     </div>
                 </form>
