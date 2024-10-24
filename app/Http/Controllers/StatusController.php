@@ -12,7 +12,7 @@ class StatusController extends Controller
      */
     public function index()
     {
-        $statuses = Status::get();
+        $statuses = Status::paginate(6);
         return view('cpanel.status.index', ['statuses' => $statuses]);
 
     }

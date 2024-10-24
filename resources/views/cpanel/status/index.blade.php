@@ -22,9 +22,7 @@
             </div>
         </div>
 
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-
-
+        <div class="overflow-x-auto  shadow-md rounded-lg">
             @php
                 $headers = ['Status Name', 'Status', 'ADD Date', 'Actions'];
                 $rows = [];
@@ -42,14 +40,16 @@
             @endphp
 
             <x-static-table :headers="$headers" :rows="$rows"/>
-
+            <div class="mt-4">
+                {{  $statuses->links() }}
+            </div>
             <form id="editStatusModal"
                   action="{{ isset($status) ? route('status.update', ['status' => $status->id]) : '#' }}"
                   style="display: none;" method="POST"
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12  w-8/12 my-14 z-30">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Status</h2>
                     <div class="mb-4">
                         <x-input-label>Status Name:</x-input-label>
@@ -97,7 +97,7 @@
             <form id="addStatusModal" method="POST" action="{{ route('status.store') }}"
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 my-14 z-30">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Status</h2>
 
                     <div class="mb-4">

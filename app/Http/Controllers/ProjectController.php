@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use App\Models\Status;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with(['status', 'user'])->get();
+        $projects = Project::with(['status', 'user'])->paginate(6);
+
         $status = Status::all();
         return view('cpanel.projects.index', ['projects' => $projects, 'status' => $status]);
     }
@@ -53,7 +55,8 @@ class ProjectController extends Controller
         $project = Project::findOrFail($id);
         $status = Status::all();
         $user = User::all();
-        return view('cpanel.projects.projectDetails', compact('project', 'status', 'user'));
+        $tasks = $project->tasks;
+        return view('cpanel.projects.projectDetails', compact('project','tasks', 'status', 'user'));
     }
 
     /**

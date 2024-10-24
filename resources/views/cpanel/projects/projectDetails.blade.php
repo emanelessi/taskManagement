@@ -48,8 +48,13 @@
                 <div class="text-black  leading-relaxed break-words">{{ $project->description}}</div>
             </div>
 
-            <!-- Back Button -->
             <div class="flex justify-end mt-6 gap-4">
+                <form method="GET" action="{{ route('projects.tasks', ['project' => $project->id]) }}">
+                    <x-primary-button type="submit">
+                        Show Tasks
+                    </x-primary-button>
+                </form>
+
                 <x-primary-button onclick="window.history.back()">Back</x-primary-button>
             </div>
         </div>

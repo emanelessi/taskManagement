@@ -26,7 +26,7 @@
         </div>
 
         <!-- start the table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <div class="overflow-x-auto  shadow-md rounded-lg">
 
             @php
                 $headers = ['Project Name', 'Status', 'Start Date','deadline', 'Cost',
@@ -52,7 +52,9 @@
             @endphp
             <x-static-table :headers="$headers" :rows="$rows"/>
             <!-- end the table -->
-
+            <div class="mt-4">
+                {{  $projects->links() }}
+            </div>
             <!-- start the edit modal -->
             <form id="editProjectModal" method="POST"
                   action="{{ isset($project) ? route('projects.update', ['project' => $project->id]) : '#' }}"
@@ -60,7 +62,7 @@
                   class=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Project</h2>
                     <div class="mb-4">
                         <x-input-label>Project Name:</x-input-label>
@@ -133,7 +135,7 @@
             <form id="addProjectModal" method="POST" action="{{ route('projects.store') }}"
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16  z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Project</h2>
                     <div class="mb-4">
                         <x-input-label>Project Name:</x-input-label>

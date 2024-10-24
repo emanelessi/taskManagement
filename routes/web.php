@@ -27,6 +27,10 @@ Route::get('/reports', function () {
     return view('reports');
 })->name('reports');
 
+//Route::get('/Task', function () {
+//    return view('task.index');
+//})->name('tasks');
+
 
 Route::get('/dashboard', function () {
     return view('cpanel.dashboard');
@@ -53,12 +57,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/projects/{id}', [ProjectController::class, 'show'])->name('projects.details');
     Route::delete('/projects/{project}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
+    Route::get('/projects/{project}/tasks', [TaskController::class, 'tasksByProject'])->name('projects.tasks');
 
     Route::patch('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
     Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks');
     Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.details');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+    Route::post('/tasks/{task}/update-category', [TaskController::class, 'updateCategory']);
 
 });
 

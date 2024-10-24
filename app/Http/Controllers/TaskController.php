@@ -21,25 +21,14 @@ class TaskController extends Controller
         $categories = Category::all();
         $statuses = Status::all();
 
-        if ($request->has('project_id')) {
-            $tasks = Task::where('project_id', $request->project_id)
-                ->with(['project', 'comments', 'attachments', 'user', 'category', 'status'])
-                ->get();
-        } else {
-            $tasks = Task::with(['project', 'comments', 'attachments', 'user', 'category', 'status'])
-                ->get();
-        }
-
+        $tasksQuery = Task::with(['project', 'comments', 'attachments', 'user', 'category', 'status']);
+        $tasks = $tasksQuery->paginate(6);
         foreach ($tasks as $task) {
-//            dd($task->attachments->first());
-            if ($task->attachments->isNotEmpty()) {
-                // احصل على أول صورة من المرفقات
-                $task->first_image_attachment = $task->attachments->first(function ($attachment) {
+            $task->first_image_attachment = $task->attachments->isNotEmpty()
+                ? $task->attachments->first(function ($attachment) {
                     return preg_match('/\.(jpg|jpeg|png|gif)$/i', $attachment->file_path);
-                });
-            } else {
-                $task->first_image_attachment = null; // تعيين null إذا لم تكن هناك مرفقات
-            }
+                })
+                : null;
         }
         return view('cpanel.tasks.index', [
             'tasks' => $tasks,
@@ -47,6 +36,7 @@ class TaskController extends Controller
             'categories' => $categories,
             'statuses' => $statuses,
         ]);
+
     }
 
     /**
@@ -136,4 +126,55 @@ class TaskController extends Controller
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
+
+    public function updateCategory(Request $request, Task $task)
+    {
+        // التحقق من صحة البيانات المدخلة
+        $request->validate([
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        // تحديث الفئة للمهمة
+        $task->category_id = $request->category_id;
+        $task->save();
+
+        // إرسال استجابة نجاح
+        return response()->json(['success' => true]);
+    }
+
+
+    public function tasksByProject(Request $request, $projectId)
+    {
+//        dd('Reached');
+        $projects = Project::findOrFail($projectId);
+        $categories = Category::all();
+        $statuses = Status::all();
+//dd($projects);
+        $tasks = Task::with(['project', 'comments', 'attachments', 'user', 'category', 'status'])
+            ->where('project_id', $projectId)
+            ->get()
+            ->groupBy('category_id');
+
+        foreach ($tasks as $taskGroup) {
+            foreach ($taskGroup as $task) {
+                if ($task->attachments->isNotEmpty()) {
+                    $task->first_image_attachment = $task->attachments->first(function ($attachment) {
+                        return preg_match('/\.(jpg|jpeg|png|gif)$/i', $attachment->file_path);
+                    });
+                } else {
+                    $task->first_image_attachment = null;
+                }
+            }
+        }
+
+        return view('cpanel.tasks.projectTasks', [
+            'tasks' => $tasks,
+            'projects' => $projects,
+            'categories' => $categories,
+            'statuses' => $statuses,
+            'selectedProjectId' => $projectId,
+        ]);
+    }
+
+
 }

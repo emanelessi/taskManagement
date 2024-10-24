@@ -1,383 +1,71 @@
 <x-app-layout>
-    <div class="flex-col  w-full  overflow-auto scrollbar-thin">
+    <div class="flex-1 overflow-auto">
+        <!-- start the alert -->
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
+        <!-- end the alert -->
 
-        {{--        @foreach($tasks as $task)--}}
-        {{--            <p class="font-semibold text-tertiary">{{ $task->project->name ?? 'Project Name' }}</p>--}}
-        {{--        @endforeach--}}
-
-        <div class="md:flex  my-4 w-full">
-            <div id="task-board" class="md:flex justify-between w-full space-x-4">
-                <x-task-board :backlogCount="0" :toDoCount="0" :tasks="$tasks ?? []"/>
-                <div class="lg:w-2/4 w-full ">
-                    <div class="flex justify-between bg-white p-4 rounded-lg">
-                        <div class="flex space-x-2 px-2 ">
-                            <h2 class="text-md font-bold">ADD MORE TOPIC</h2>
-                        </div>
-                        <div class="flex space-x-2 px-2 addTopicBtn">
-                            <img src="{{ asset('image/icon/add.svg') }}" alt="add"/>
-                        </div>
-                    </div>
-                    <div class="mt-2">
-                        <div class=" p-3 rounded-lg shadow mb-2 addTaskBtn">
-                            <svg width="250" height="15"
-                                 class="flex justify-center items-center mx-auto"
-                                 viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M0.96 5.064V3.64H3.984V0.808H5.456V3.64H8.48V5.064H5.456V7.912H3.984V5.064H0.96Z"
-                                    fill="#232360"/>
-                            </svg>
-
-                        </div>
-                    </div>
-                </div>
+        <div class="md:flex justify-between">
+            <div class="mb-4">
+                <x-primary-button class="addTaskBtn">
+                    + Add New Task
+                </x-primary-button>
             </div>
-            <form id="addTaskModal" style="display: none;" method="POST" action="{{ route('tasks.store') }}"
-                  class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
-                @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  mt-14 z-30">
-                    <h2 class="text-lg font-semibold mb-4">Add New Task</h2>
-                    <div class="mb-4">
-                        <x-input-label>Task Name:</x-input-label>
-                        <x-text-input class="w-full " type="text" name="title" required></x-text-input>
+            <div class="mb-4 md:w-4/12">
+                <form>
+                    <div class="relative w-full">
+                        <x-text-input type="text" placeholder="Search "
+                                      class="text-sm border border-secondary w-full bg-primary rounded-md "/>
+                        <x-primary-button type="submit"
+                                          class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg ">
+                            <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4"/>
+                        </x-primary-button>
                     </div>
-                    <div class="mb-4">
-                        <x-input-label>Project Name:</x-input-label>
-                        <select name="project_id"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">Select Project</option>
-                            @foreach($projects as $project)
-                                <option value="{{ $project->id }}" required>{{ $project->name }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Category Name:</x-input-label>
-                        <select name="category_id"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">Select Category</option>
-                            @foreach($categories as $category)
-                                <option value="{{ $category->id }}" required>{{ $category->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
-                        <select name="status_id"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">Select Status</option>
-                            @foreach($statuses as $status)
-                                <option value="{{ $status->id }}" required>{{ $status->name }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>priority:</x-input-label>
-                        <select name="priority"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required>
-                            <option value="">Select priority</option>
-                            <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
-                            <option value="High">High
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Due Date:</x-input-label>
-                        <x-text-input class="w-full " type="date" name="due_date" required></x-text-input>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>completed Date:</x-input-label>
-                        <x-text-input class="w-full " type="date" name="completed_at"></x-text-input>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Description:</x-input-label>
-                        <textarea type="text" name="description"
-                                  class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>image:</x-input-label>
-                        <x-text-input
-                            class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"
-                            type="file" name="file_path"></x-text-input>
-                    </div>
-                    <div class="flex justify-end  gap-4">
-                        <x-danger-button type="button" id="cancelAddTask">Cancel</x-danger-button>
-                        <x-primary-button>Add Task</x-primary-button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
+        </div>
+        <!-- start the table -->
+        <div class="overflow-x-auto shadow-md rounded-lg">
+            @php
+                $headers = ['Task Title',  'priority', 'Start Date','Completed Date', 'category', 'Status','project',
+                  'Created By', 'Actions'];
+                $rows = [];
+                foreach ($tasks as $task) {
+                    $rows[] = [
+                        ' <a href="' . route('tasks.details', $task->id) . '" class="text-blue-600 hover:underline">' . $task->title . '</a>',
+                         $task->priority,
+                          \Carbon\Carbon::parse($task->due_date)->format('Y-m-d'),
+                        \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d'),
+                      $task->category->name ?? '-',
+                        $task->status->name ?? '-',
+                        $task->project->name ?? '-',
+                        $task->user->name ?? '-',
+                        '<a href="#" class="text-tertiary hover:text-tertiary editTask"
+                            data-id="' . $task->id . '"
+                          data-title="' . $task->title . '"
+                            data-description="' . $task->description . '"
+                            data-due-date="' . $task->due_date . '"
+                            data-priority="' . $task->priority . '"
+                          data-category-id="' . optional($task->category)->id . '"
+        data-status-id="' . optional($task->status)->id . '"
+        data-assigned-to="' . optional($task->user)->id . '"
+        data-project-id="' . optional($task->project)->id . '"
+                            data-completed-at="' . $task->completed_at . '" >Edit</a>
+                         <a href="#" class="text-red-600 hover:text-red-900 ml-4  deleteTask" data-id="' . $task->id . '">Delete</a>',
+                    ];
+                }
+            @endphp
+            <x-static-table :headers="$headers" :rows="$rows"/>
+            <!-- end the table -->
+            <div class="mt-4">
+                {{  $tasks->links() }}
+            </div>
+            <x-add-task-form :projects="$projects" :categories="$categories" :statuses="$statuses" />
 
-            <form id="editTaskModal" style="display: none;" method="POST"
-                  action="{{ isset($task) ? route('tasks.update', ['task' => $task->id]) : '#' }}"
-                  class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
-                @csrf
-                @method('PATCH')
-
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
-                    <h2 class="text-lg font-semibold my-4">Edit Task</h2>
-                    <div class="mb-4">
-                        <x-input-label>Task Name:</x-input-label>
-                        <x-text-input class="w-full " type="text" name="title" value="{{ $task->title ?? '' }}"
-                                      required></x-text-input>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Project Name:</x-input-label>
-                        <select name="project_id"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">Select Project</option>
-                            @foreach($projects as $project)
-                                <option
-                                    value="{{ $project->id }}" {{ isset($task) && $task->project_id == $project->id ? 'selected' : '' }}>
-                                    {{ $project->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Category Name:</x-input-label>
-                        <select name="category_id"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">Select Category</option>
-                            @foreach($categories as $category)
-                                <option
-                                    value="{{ $category->id }}" {{ isset($task) && $task->category_id == $category->id ? 'selected' : '' }}>
-                                    {{ $category->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
-                        <select name="status_id"
-                                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">Select Status</option>
-                            @foreach($statuses as $status)
-                                <option
-                                    value="{{ $status->id }}" {{ isset($task) && $task->status_id == $status->id ? 'selected' : '' }}>
-                                    {{ $status->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>priority:</x-input-label>
-                        <select name="priority"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required>
-                            <option value="Low" {{ isset($task) && $task->priority == 'Low' ? 'selected' : '' }}>Low
-                            </option>
-                            <option value="Medium" {{ isset($task) && $task->priority == 'Medium' ? 'selected' : '' }}>
-                                Medium
-                            </option>
-                            <option value="High" {{ isset($task) && $task->priority == 'High' ? 'selected' : '' }}>
-                                High
-                            </option>
-                        </select>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Due Date:</x-input-label>
-                        <x-text-input class="w-full" type="date" name="due_date" value="{{ $task->due_date ?? '' }}"
-                                      required></x-text-input>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>completed Date:</x-input-label>
-                        <x-text-input class="w-full" type="date" name="completed_at"
-                                      value="{{ $task->completed_at ?? '' }}"></x-text-input>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>Description:</x-input-label>
-                        <textarea name="description"
-                                  class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">{{ $task->description ?? '' }}</textarea>
-                    </div>
-                    <div class="mb-4">
-                        <x-input-label>image:</x-input-label>
-                        <x-text-input
-                            class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"
-                            type="file" name="file_path"></x-text-input>
-                    </div>
-                    <div class="flex justify-end  gap-4">
-                        <x-danger-button type="button" id="cancelEditTask">Cancel</x-danger-button>
-                        <x-primary-button>Edit Task</x-primary-button>
-                    </div>
-                </div>
-            </form>
-            <form id="deleteTaskModal" style="display: none;"
-                  action="{{ isset($task) ? route('tasks.destroy', ['task' => $task->id]) : '#' }}"
-                  method="POST" style="display: none;"
-                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                @csrf
-                @method('DELETE')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  my-14 z-30">
-                    <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
-                    <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"></span>?
-                    </x-input-label>
-                    <input type="hidden" id="task_id" name="task_id"/>
-
-                    <div class="flex justify-end  gap-4">
-                        <x-primary-button type="button" id="cancelDeleteTask">Cancel</x-primary-button>
-                        <x-danger-button>Delete</x-danger-button>
-                    </div>
-                </div>
-            </form>
-            <form id="addCategoryModal" style="display: none;" method="POST" action="{{ route('categories.store') }}"
-                  class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 my-14 z-30">
-                    <h2 class="text-lg font-semibold mb-4">Add New Category</h2>
-
-                    <div class="mb-4">
-                        <x-input-label>Category Name:</x-input-label>
-                        <x-text-input class="w-full" type="text" name="name" required/>
-                    </div>
-
-                    <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
-                        <select name="status"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required>
-                            <option value="">Select status</option>
-                            <option value="enable">Enable</option>
-                            <option value="disable">Disable</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end gap-4">
-                        <x-danger-button type="button" id="cancelAddCategory">Cancel</x-danger-button>
-                        <x-primary-button type="submit">Add Category</x-primary-button>
-                    </div>
-                </div>
-            </form>
+            <x-edit-task-form :task="$task" :projects="$projects" :categories="$categories" :statuses="$statuses" />
+            <x-delete-task-form :task="$task" />
         </div>
     </div>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            <!--start storing models in variables -->
-            const addTopicBtns = document.querySelectorAll('.addTopicBtn');
-            const addCategoryModal = document.querySelector('#addCategoryModal');
-            const cancelAddCategory = document.querySelector('#cancelAddCategory');
-
-            // const deleteTasks = document.querySelectorAll('.deleteTask');
-            document.getElementById('cancelDeleteTask').addEventListener('click', () => {
-                deleteTaskModal.style.display = 'none';
-            });
-
-            document.querySelectorAll('.deleteTask').forEach(deleteButton => {
-                deleteButton.addEventListener('click', function () {
-                    const taskId = this.getAttribute('data-id');
-
-                    document.getElementById('task_id').value = taskId;
-                    deleteTaskModal.action = `{{ route('tasks.destroy', '') }}/${taskId}`;
-                    deleteTaskModal.style.display = 'flex';
-                });
-            });
-            // const deleteTaskModal = document.querySelector('#deleteTaskModal');
-            const cancelDeleteTask = document.querySelector('#cancelDeleteTask');
-
-            const addTaskBtn = document.querySelectorAll('.addTaskBtn');
-            const addTaskModal = document.querySelector('#addTaskModal');
-            const cancelAddTask = document.querySelector('#cancelAddTask');
-
-            // const editTasks = document.querySelectorAll('.editTask');
-            document.querySelectorAll('.editTask').forEach(editButton => {
-                editButton.addEventListener('click', function () {
-                    const taskId = this.getAttribute('data-id');
-                    const taskTitle = this.getAttribute('data-title');
-                    const taskDescription = this.getAttribute('data-description');
-                    const taskDueDate = this.getAttribute('data-due-date');
-                    const taskPriority = this.getAttribute('data-priority');
-                    const taskCategoryId = this.getAttribute('data-category-id');
-                    const taskStatusId = this.getAttribute('data-status-id');
-                    const taskProjectId = this.getAttribute('data-project-id');
-                    const taskCompletedAt = this.getAttribute('data-completed-at');
-
-                    document.querySelector('#editTaskModal [name="title"]').value = taskTitle;
-                    document.querySelector('#editTaskModal [name="description"]').value = taskDescription;
-                    document.querySelector('#editTaskModal [name="due_date"]').value = taskDueDate;
-                    document.querySelector('#editTaskModal [name="priority"]').value = taskPriority;
-                    document.querySelector('#editTaskModal [name="category_id"]').value = taskCategoryId;
-                    document.querySelector('#editTaskModal [name="status_id"]').value = taskStatusId;
-                    document.querySelector('#editTaskModal [name="project_id"]').value = taskProjectId;
-                    document.querySelector('#editTaskModal [name="completed_at"]').value = taskCompletedAt;
 
 
-                    editTaskModal.setAttribute('action', `{{ route('tasks.update', '') }}/${taskId}`);
-                    editTaskModal.style.display = 'flex';
-                });
-            });
-            // const editTaskModal = document.querySelector('#editTaskModal');
-            const cancelEditTask = document.querySelector('#cancelEditTask');
-
-            // فتح وإغلاق المودال لإضافة موضوع
-            addTopicBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (addCategoryModal) {
-                        addCategoryModal.style.display = 'flex';
-                    }
-                });
-            });
-
-            if (cancelAddCategory) {
-                cancelAddCategory.addEventListener('click', () => {
-                    if (addCategoryModal) {
-                        addCategoryModal.style.display = 'none';
-                    }
-                });
-            }
-
-            // فتح وإغلاق المودال لإضافة مهمة
-            addTaskBtn.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    if (addTaskModal) {
-                        addTaskModal.style.display = 'flex';
-                    }
-                });
-            });
-
-            if (cancelAddTask) {
-                cancelAddTask.addEventListener('click', () => {
-                    if (addTaskModal) {
-                        addTaskModal.style.display = 'none';
-                    }
-                });
-            }
-
-            // فتح وإغلاق المودال لحذف مهمة
-            // deleteTasks.forEach(btn => {
-            //     btn.addEventListener('click', () => {
-            //         if (deleteTaskModal) {
-            //             deleteTaskModal.style.display = 'flex';
-            //         }
-            //     });
-            // });
-
-            if (cancelDeleteTask) {
-                cancelDeleteTask.addEventListener('click', () => {
-                    if (deleteTaskModal) {
-                        deleteTaskModal.style.display = 'none';
-                    }
-                });
-            }
-
-            // فتح وإغلاق المودال لتعديل مهمة
-            // editTasks.forEach(btn => {
-            //     btn.addEventListener('click', () => {
-            //         if (editTaskModal) {
-            //             editTaskModal.style.display = 'flex';
-            //         }
-            //     });
-            // });
-
-            if (cancelEditTask) {
-                cancelEditTask.addEventListener('click', () => {
-                    if (editTaskModal) {
-                        editTaskModal.style.display = 'none';
-                    }
-                });
-            }
-        });
-
-    </script>
 </x-app-layout>

@@ -7,7 +7,7 @@
 
         <div class="md:flex justify-between">
             <div class="mb-4">
-                <x-primary-button id="addCategoryBtn">
+                <x-primary-button class="addCategoryBtn">
                     + Add New Category
                 </x-primary-button>
             </div>
@@ -27,7 +27,7 @@
         </div>
 
         <!-- start the table -->
-        <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <div class="overflow-x-auto  shadow-md rounded-lg">
             @php
                 $headers = ['Category Name', 'Status', 'ADD Date', 'Actions'];
                 $rows = [];
@@ -46,7 +46,9 @@
 
             <x-static-table :headers="$headers" :rows="$rows"/>
             <!-- end the table -->
-
+            <div class="mt-4">
+                {{  $categories->links() }}
+            </div>
             <!-- start the edit modal -->
             <form id="editCategoryModal"
                   action="{{ isset($category) ? route('categories.update', ['category' => $category->id]) : '#' }}"
@@ -54,7 +56,7 @@
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 my-14 z-30">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Category</h2>
                     <div class="mb-4">
                         <x-input-label>Category Name:</x-input-label>
@@ -107,34 +109,7 @@
             <!-- end the delete modal -->
 
             <!-- start the add modal -->
-            <form id="addCategoryModal" method="POST" action="{{ route('categories.store') }}"
-                  class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 my-14 z-30">
-                    <h2 class="text-lg font-semibold mb-4">Add New Category</h2>
-
-                    <div class="mb-4">
-                        <x-input-label>Category Name:</x-input-label>
-                        <x-text-input class="w-full" type="text" name="name" required/>
-                    </div>
-
-                    <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
-                        <select name="status"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                                required>
-                            <option value="">Select status</option>
-                            <option value="enable">Enable</option>
-                            <option value="disable">Disable</option>
-                        </select>
-                    </div>
-
-                    <div class="flex justify-end gap-4">
-                        <x-danger-button type="button" id="cancelAddCategory">Cancel</x-danger-button>
-                        <x-primary-button type="submit">Add Category</x-primary-button>
-                    </div>
-                </div>
-            </form>
+            <x-add-category-form/>
             <!-- end the add modal -->
 
         </div>
@@ -143,19 +118,10 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             <!--start storing models in variables -->
-            const addCategoryModal = document.getElementById('addCategoryModal');
             const editCategoryModal = document.getElementById('editCategoryModal');
             const deleteCategoryModal = document.getElementById('deleteCategoryModal');
             <!--end storing models in variables -->
 
-            <!--start open and close the model -->
-            document.getElementById('addCategoryBtn').addEventListener('click', () => {
-                addCategoryModal.classList.remove('hidden');
-            });
-
-            document.getElementById('cancelAddCategory').addEventListener('click', () => {
-                addCategoryModal.classList.add('hidden');
-            });
 
             document.getElementById('cancelEditCategory').addEventListener('click', () => {
                 editCategoryModal.style.display = 'none';
