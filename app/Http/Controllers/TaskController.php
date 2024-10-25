@@ -107,7 +107,7 @@ class TaskController extends Controller
 
         try {
             $task->update($request->only(['title', 'description', 'due_date', 'priority', 'category_id', 'status_id', 'project_id', 'completed_at', 'assigned_to']));
-            return redirect()->route('tasks')->with('success', 'Tasks updated successfully!');
+            return redirect()->back()->with('success', 'Tasks updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }

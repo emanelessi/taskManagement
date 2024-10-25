@@ -5,6 +5,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StatusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -64,6 +65,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index'])->name('tasks');
     Route::get('/tasks/{id}', [TaskController::class, 'show'])->name('tasks.details');
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+    Route::post('/comments', [CommentController::class, 'store'])->name('comment.store');
+    Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comment.update');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy');
 
     Route::post('/tasks/{task}/update-category', [TaskController::class, 'updateCategory']);
 

@@ -46,10 +46,10 @@
                         <div
                             class="text-gray-800 font-medium">{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}</div>
                     </div>
-                    <!-- Created By -->
+                    <!-- Assigned To -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Created By:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->user->name }}</div>
+                        <p class="text-tertiary font-bold text-lg">Assigned To:</p>
+                        <div class="text-gray-800 font-medium">{{ $task->user->name ?? 'غير متوفر' }}</div>
                     </div>
                 </div>
 
@@ -59,11 +59,7 @@
                         <p class="text-tertiary font-bold text-lg">Category:</p>
                         <div class="text-gray-800 font-medium">{{ $task->category->name ?? 'غير متوفر' }}</div>
                     </div>
-                    <!-- Assigned To -->
-                    <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Assigned To:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->assignedTo->name ?? 'غير متوفر' }}</div>
-                    </div>
+
 
                 </div>
             </div>
@@ -79,10 +75,39 @@
             <div class="mb-6">
                 <h3 class="text-tertiary font-bold text-lg mb-2">Comments:</h3>
                 @foreach ($comments as $comment)
-                    <div class="p-4 mb-4 border border-gray-300 rounded-lg bg-gray-50 shadow">
-                        <div class="text-gray-800 font-medium">{{ $comment->comment }}</div>
-                        <div class="text-gray-500 text-sm mt-1">Posted by: {{ $comment->user->name ?? 'Unknown User' }}
-                            on {{ $comment->created_at->format('Y-m-d H:i') }}</div>
+                    <div
+                        class="grid grid-cols-2 lg:grid-cols-2 gap-6  p-4 mb-4 border leading-relaxed break-words border-gray-300 rounded-lg bg-gray-50 shadow">
+                        <div>
+                            <div class="text-gray-800 font-medium">{{ $comment->comment }}</div>
+                            <div class="text-gray-500 text-sm mt-1">Posted
+                                by: {{ $comment->user->name ?? 'Unknown User' }}
+                                on {{ $comment->created_at->format('Y-m-d H:i') }}</div>
+                            <div class="text-gray-500 text-sm mt-1">
+                                Updated At: {{ $comment->updated_at->format('Y-m-d H:i') }}
+
+                            </div>
+                        </div>
+                        <!-- Buttons for Edit and Delete -->
+                        <div class="flex gap-4 mt-2 justify-end">
+                            <!-- Edit Button SVG -->
+                            <button onclick="openEditModal({{ $comment->id }}, '{{ $comment->comment }}')"
+                                    class="text-blue-600 hover:text-blue-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                     stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M15.232 5.232a3 3 0 014.243 4.243L7.5 21H3v-4.5L15.232 5.232z"/>
+                                </svg>
+                            </button>
+
+                            <!-- Delete Button SVG -->
+                            <button onclick="openDeleteModal({{ $comment->id }})"
+                                    class="text-red-600 hover:text-red-800">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                                     stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </button>
+                        </div>
                     </div>
                 @endforeach
                 @if ($comments->isEmpty())
@@ -90,7 +115,7 @@
                 @endif
             </div>
             <div class="mb-6">
-                <form action="#" method="POST">
+                <form action="{{ route('comment.store') }}" method="POST">
                     @csrf
                     <input type="hidden" name="task_id" value="{{ $task->id }}">
                     <div class="mb-4">
@@ -107,15 +132,81 @@
             <!-- Back Button -->
             <div class="flex justify-end mt-6 gap-4">
                 <!-- Edit Button -->
-
-                <x-primary-button href="#">
+                <x-primary-button href="#" class="editTask"
+                                  data-id="{{ $task->id }}"
+                                  data-title="{{ $task->title }}"
+                                  data-description="{{ $task->description }}"
+                                  data-due-date="{{ $task->due_date }}"
+                                  data-priority="{{ $task->priority }}"
+                                  data-category-id="{{ $task->category_id }}"
+                                  data-status-id="{{ $task->status_id }}"
+                                  data-project-id="{{ $task->project_id }}"
+                                  data-completed-at="{{ $task->completed_at }} ">
                     Edit Task
                 </x-primary-button>
+                <a href="{{ url('/tasks') }}">
+                    <x-primary-button>Back</x-primary-button>
+                </a>
 
+                <x-edit-task-form :task="$task" :projects="$project" :categories="$category" :statuses="$status"/>
+                <!-- Edit Comment Modal -->
+                <div id="editCommentModal"
+                     class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                        <h2 class="text-xl font-semibold mb-4">Edit Comment</h2>
+                        <form id="editCommentForm" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <textarea id="editCommentText" name="comment" rows="4"
+                                      class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
+                            <div class="flex justify-end mt-4 gap-4">
+                                <x-danger-button type="button" onclick="closeEditModal()">Cancel</x-danger-button>
+                                <x-primary-button type="submit">Save Changes</x-primary-button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
-                <x-primary-button onclick="window.history.back()">Back</x-primary-button>
+                <!-- Delete Comment Modal -->
+                <div id="deleteCommentModal"
+                     class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                        <h2 class="text-xl font-semibold mb-4">Delete Comment</h2>
+                        <p>Are you sure you want to delete this comment?</p>
+                        <div class="flex justify-end mt-4 gap-4">
+                            <x-danger-button type="button" onclick="closeDeleteModal()">Cancel</x-danger-button>
+                            <form id="deleteCommentForm" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <x-primary-button type="submit">Delete</x-primary-button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>
     </div>
+
+    <Script>
+        function openEditModal(commentId, commentText) {
+            document.getElementById('editCommentModal').classList.remove('hidden');
+            document.getElementById('editCommentText').value = commentText;
+            document.getElementById('editCommentForm').action = `/comments/${commentId}`;
+        }
+
+        function closeEditModal() {
+            document.getElementById('editCommentModal').classList.add('hidden');
+        }
+
+        function openDeleteModal(commentId) {
+            document.getElementById('deleteCommentModal').classList.remove('hidden');
+            document.getElementById('deleteCommentForm').action = `/comments/${commentId}`;
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteCommentModal').classList.add('hidden');
+        }
+
+    </Script>
 </x-app-layout>

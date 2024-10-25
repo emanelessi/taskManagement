@@ -28,7 +28,7 @@
         <div class="overflow-x-auto shadow-md rounded-lg">
             @php
                 $headers = ['Task Title',  'priority', 'Start Date','Completed Date', 'category', 'Status','project',
-                  'Created By', 'Actions'];
+                  'Assigned To', 'Actions'];
                 $rows = [];
                 foreach ($tasks as $task) {
                     $rows[] = [
