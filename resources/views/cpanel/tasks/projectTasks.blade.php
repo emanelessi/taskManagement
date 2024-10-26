@@ -3,15 +3,15 @@
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
 
-        {{--        @foreach($tasks as $task)--}}
-        {{--            <p class="font-semibold text-tertiary">{{ $task->project->name ?? 'Project Name' }}</p>--}}
-        {{--        @endforeach--}}
-
+        <div class="bg-white p-3 rounded-xl mx-auto flex justify-center font-bold">
+            <a href="{{ route('projects.details', $project->id) }}"
+               class="text-tertiary hover:underline">{{ $project->name ?? 'Project Name' }}</a>
+        </div>
         <div class="md:flex  my-4 w-full">
-            <div id="task-board" class="md:flex justify-between w-full space-x-4">
+            <div id="task-board" class="md:flex justify-between w-full md:space-x-4">
                 <x-task-board :tasks="$tasks ?? []"/>
                 <div class="lg:w-2/4 w-full ">
-                    <div class="flex justify-between bg-white p-4 rounded-lg">
+                    <div class="flex justify-between bg-black/20 p-4 rounded-lg">
                         <div class="flex space-x-2 px-2 ">
                             <h2 class="text-md font-bold">ADD MORE TOPIC</h2>
                         </div>
@@ -34,8 +34,8 @@
                 </div>
             </div>
             <x-add-task-form :projects="$projects" :categories="$categories" :statuses="$statuses"/>
-            <x-edit-task-form :task="$task" :projects="$projects" :categories="$categories" :statuses="$statuses"/>
-            <x-delete-task-form :task="$task"/>
+            {{--            <x-edit-task-form :task="$tasks" :projects="$projects" :categories="$categories" :statuses="$statuses"/>--}}
+            {{--            <x-delete-task-form :task="$tasks"/>--}}
             <x-add-category-form/>
         </div>
     </div>

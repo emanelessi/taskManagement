@@ -5,6 +5,7 @@
     @csrf
     <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
         <h2 class="text-lg font-semibold mb-4">Add New Task</h2>
+        <input type="hidden" id="category-id-input" name="category_id">
         <div class="mb-4">
             <x-input-label>Task Name:</x-input-label>
             <x-text-input class="w-full " type="text" name="title" required></x-text-input>
@@ -14,27 +15,17 @@
             <select name="project_id"
                     class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                 <option value="">Select Project</option>
-                @if(isset($selectedProjectId)) <!-- تحقق إذا كان ID المشروع المحدد موجودًا -->
                 @foreach($projects as $project)
-                    <option value="{{ $project->id }}"
-                            @if($project->id == $selectedProjectId) selected @endif>
-                        {{ $project->name }}
-                    </option>
+                    <option value="{{ $project->id }}" >{{ $project->name }}</option>
                 @endforeach
-                @else <!-- إذا لم يكن هناك مشروع محدد، عرض جميع المشاريع -->
-                @foreach($projects as $project)
-                    <option value="{{ $project->id }}" required>{{ $project->name }}</option>
-                @endforeach
-                @endif
             </select>
         </div>
         <div class="mb-4">
             <x-input-label>Category Name:</x-input-label>
-            <select name="category_id"
-                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+            <select id="category-select" name="category_id" class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                 <option value="">Select Category</option>
                 @foreach($categories as $category)
-                    <option value="{{ $category->id }}" required>{{ $category->name }}</option>
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -88,22 +79,26 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const addTaskBtn = document.querySelectorAll('.addTaskBtn');
+        const addTaskBtns = document.querySelectorAll('.addTaskBtn');
         const addTaskModal = document.querySelector('#addTaskModal');
         const cancelAddTask = document.querySelector('#cancelAddTask');
+        const categorySelect = document.querySelector('#category-select');
 
-        addTaskBtn.forEach(btn => {
+        addTaskBtns.forEach(btn => {
             btn.addEventListener('click', () => {
-                if (addTaskModal) {
-                    addTaskModal.style.display = 'flex';
+                const categoryId = btn.getAttribute('data-category-id');
+                if (categoryId) {
+                    categorySelect.value = categoryId;
+                } else {
+                    categorySelect.value = '';
                 }
+                addTaskModal.style.display = 'flex';
             });
         });
+
         if (cancelAddTask) {
             cancelAddTask.addEventListener('click', () => {
-                if (addTaskModal) {
-                    addTaskModal.style.display = 'none';
-                }
+                addTaskModal.style.display = 'none';
             });
         }
     });

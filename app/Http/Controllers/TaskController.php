@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attachment;
 use App\Models\Category;
 use App\Models\Project;
 use App\Models\Status;
@@ -67,7 +68,7 @@ class TaskController extends Controller
                 'completed_at' => $request->completed_at,
                 'assigned_to' => $request->user()->id,
             ]);
-            return redirect()->route('tasks')->with('success', 'Task added successfully!');
+            return redirect()->back()->with('success', 'Task added successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
@@ -145,36 +146,26 @@ class TaskController extends Controller
 
     public function tasksByProject(Request $request, $projectId)
     {
-//        dd('Reached');
-        $projects = Project::findOrFail($projectId);
+        $projects = Project::all();
+        $project = Project::findOrFail($projectId);
         $categories = Category::all();
         $statuses = Status::all();
-//dd($projects);
-        $tasks = Task::with(['project', 'comments', 'attachments', 'user', 'category', 'status'])
+
+        $tasks = Task::with(['project', 'comments', 'user', 'category', 'status'])
             ->where('project_id', $projectId)
             ->get()
             ->groupBy('category_id');
 
-        foreach ($tasks as $taskGroup) {
-            foreach ($taskGroup as $task) {
-                if ($task->attachments->isNotEmpty()) {
-                    $task->first_image_attachment = $task->attachments->first(function ($attachment) {
-                        return preg_match('/\.(jpg|jpeg|png|gif)$/i', $attachment->file_path);
-                    });
-                } else {
-                    $task->first_image_attachment = null;
-                }
-            }
-        }
-
         return view('cpanel.tasks.projectTasks', [
             'tasks' => $tasks,
             'projects' => $projects,
+            'project' => $project,
             'categories' => $categories,
             'statuses' => $statuses,
             'selectedProjectId' => $projectId,
         ]);
     }
+
 
 
 }

@@ -7,11 +7,23 @@
         <div class="bg-white shadow-lg rounded-lg p-8">
             <div class="grid mb-5 gap-6">
                 <!-- Task Name -->
-                <div class="flex items-center gap-2">
-                    <p class="text-tertiary font-bold text-lg">Task Name:</p>
-                    <div class="text-gray-800 font-medium">{{ $task->title }}</div>
-                </div>
 
+                <div class="flex justify-between my-3">
+                    <div class="flex items-center gap-2">
+                        <p class="text-tertiary font-bold text-lg">Task Name:</p>
+                        <div class="text-gray-800 font-medium">{{ $task->title }}</div>
+                    </div>
+                    <div class="flex space-x-2 px-2 ">
+                        <img src="{{ asset('image/icon/delete.svg') }}" alt="delete" width="15" class="deleteTask"
+                             data-id="{{ $task->id }}"/>
+                        <img src="{{ asset('image/icon/edit.svg') }}" alt="edit" width="20" class="editTask"
+                             data-id="{{ $task->id }}" data-title="{{ $task->title }}"
+                             data-description="{{ $task->description }}" data-due-date="{{ $task->due_date }}"
+                             data-priority="{{ $task->priority }}" data-category-id="{{ $task->category_id }}"
+                             data-status-id="{{ $task->status_id }}" data-project-id="{{ $task->project_id }}"
+                             data-completed-at="{{ $task->completed_at }}"/>
+                    </div>
+                </div>
             </div>
             <!-- Section with Background -->
             <div class="bg-gradient-to-r from-quaternary/30 to-tertiary/10 p-6 rounded-lg mb-6 shadow-inner">
@@ -149,6 +161,8 @@
                 </a>
 
                 <x-edit-task-form :task="$task" :projects="$project" :categories="$category" :statuses="$status"/>
+                <x-delete-task-form :task="$task"/>
+
                 <!-- Edit Comment Modal -->
                 <div id="editCommentModal"
                      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
