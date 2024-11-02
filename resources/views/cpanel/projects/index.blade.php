@@ -12,16 +12,19 @@
                 </x-primary-button>
             </div>
             <div class="mb-4 md:w-4/12">
-                <form>
+                <form id="searchForm" method="GET" action="{{ route('projects') }}">
                     <div class="relative w-full">
-                        <x-text-input type="text" placeholder="Search "
-                                      class="text-sm border border-secondary w-full bg-primary rounded-md "/>
-                        <x-primary-button type="submit"
-                                          class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg ">
-                            <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4"/>
-                        </x-primary-button>
+                        <input type="text" name="search" id="searchInput" placeholder="Search"
+                               value="{{ request('search') }}"
+                               class="text-sm border border-secondary w-full bg-primary rounded-md"
+                               oninput="handleSearchInput()">
+                        <button type="submit"
+                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg">
+                            <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4">
+                        </button>
                     </div>
                 </form>
+
             </div>
         </div>
 
@@ -62,7 +65,7 @@
                   class=" fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Project</h2>
                     <div class="mb-4">
                         <x-input-label>Project Name:</x-input-label>
@@ -239,9 +242,21 @@
                     deleteProjectModal.style.display = 'flex';
                 });
             });
-            <!--end process  in the delete model -->
 
         });
+
+        function handleSearchInput() {
+            const query = document.getElementById('searchInput').value;
+            if (query === '') {
+                window.location.href = "{{ route('tasks') }}";
+            } else {
+                fetch(`/tasks?search=${query}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.querySelector('.table-container').innerHTML = html;
+                    });
+            }
+        }
     </script>
 
 </x-app-layout>

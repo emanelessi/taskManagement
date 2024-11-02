@@ -12,16 +12,18 @@
                 </x-primary-button>
             </div>
             <div class="mb-4 md:w-4/12">
-                <form>
+                <form id="searchForm" method="GET" action="{{ route('tasks') }}">
                     <div class="relative w-full">
-                        <x-text-input type="text" placeholder="Search "
-                                      class="text-sm border border-secondary w-full bg-primary rounded-md "/>
-                        <x-primary-button type="submit"
-                                          class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg ">
-                            <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4"/>
-                        </x-primary-button>
+                        <input type="text" name="search" id="searchInput" placeholder="Search" value="{{ request('search') }}"
+                               class="text-sm border border-secondary w-full bg-primary rounded-md"
+                               oninput="handleSearchInput()">
+                        <button type="submit"
+                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg">
+                            <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4">
+                        </button>
                     </div>
                 </form>
+
             </div>
         </div>
         <!-- start the table -->
@@ -67,5 +69,19 @@
         </div>
     </div>
 
+    <script>
+        function handleSearchInput() {
+            const query = document.getElementById('searchInput').value;
+            if (query === '') {
+                window.location.href = "{{ route('tasks') }}";
+            } else {
+                fetch(`/tasks?search=${query}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.querySelector('.table-container').innerHTML = html;
+                    });
+            }
+        }
+    </script>
 
 </x-app-layout>

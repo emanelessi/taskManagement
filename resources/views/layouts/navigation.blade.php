@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+<nav x-data="{ open: false }" class="bg-sky-light dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -75,8 +75,11 @@
             <x-responsive-nav-link :href="route('projects')" :active="request()->routeIs('projects')">
                 {{ __('projects') }}
             </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('reports')" :active="request()->routeIs('reports')">
-                {{ __('reports') }}
+            <x-responsive-nav-link :href="route('project.report')" :active="request()->routeIs('project.report')">
+                {{ __('Project Report') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('task.report')" :active="request()->routeIs('task.report')">
+                {{ __('Task Report') }}
             </x-responsive-nav-link>
 
         </div>

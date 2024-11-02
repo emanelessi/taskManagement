@@ -10,9 +10,13 @@ class StatusController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $statuses = Status::paginate(6);
+        $query = $request->input('search');
+        $statuses = Status::where('name', 'like', "%$query%")
+           ->orWhere('status', 'like', "%$query%")
+            ->paginate(10);
+
         return view('cpanel.status.index', ['statuses' => $statuses]);
 
     }

@@ -10,9 +10,13 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::paginate(6);
+        $query = $request->input('search');
+        $categories = Category::where('name', 'like', "%$query%")
+            ->orWhere('status', 'like', "%$query%")
+            ->paginate(10);
+
         return view('cpanel.categories.index', compact('categories'));
     }
 

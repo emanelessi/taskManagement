@@ -6,6 +6,7 @@ use App\Http\Controllers\StatusController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,9 +25,9 @@ Route::get('/', function () {
 });
 
 
-Route::get('/reports', function () {
-    return view('reports');
-})->name('reports');
+//Route::get('/reports', function () {
+//    return view('reports');
+//})->name('reports');
 
 //Route::get('/Task', function () {
 //    return view('task.index');
@@ -41,6 +42,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::patch('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
@@ -73,6 +76,12 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/tasks/{task}/update-category', [TaskController::class, 'updateCategory']);
 
+
+    Route::get('/project-report', [ProjectController::class, 'projectReport'])->name('project.report');
+    Route::post('/project-pdf', [ProjectController::class, 'projectPdf'])->name('project.pdf');
+
+    Route::get('/task-report', [TaskController::class, 'taskReport'])->name('task.report');
+    Route::post('/task-pdf', [TaskController::class, 'taskPdf'])->name('task.pdf');
 });
 
 require __DIR__.'/auth.php';

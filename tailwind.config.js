@@ -27,7 +27,9 @@ export default {
                 quaternary: '#94A2BC',
                 black: '#23235F',
                 white: '#FFFFFF',
-            },
+                'sky-light': '#E0E7FF',
+                'blue-pale': '#F0F4FF',
+             },
             screens: {
                 sm: '540px',
                 // => @media (min-width: 576px) { ... }

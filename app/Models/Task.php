@@ -11,7 +11,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class Task extends Model
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles,SoftDeletes;
+    use HasApiTokens, Notifiable, HasRoles,SoftDeletes;
 
     protected $guarded = [];
 
