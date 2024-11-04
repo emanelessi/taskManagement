@@ -7,9 +7,11 @@
 
         <div class="md:flex justify-between">
             <div class="mb-4">
+                @can('create projects')
                 <x-primary-button id="addProjectBtn">
                     + Add New Project
                 </x-primary-button>
+                @endcan
             </div>
             <div class="mb-4 md:w-4/12">
                 <form id="searchForm" method="GET" action="{{ route('projects') }}">
@@ -32,27 +34,34 @@
         <div class="overflow-x-auto  shadow-md rounded-lg">
 
             @php
-                $headers = ['Project Name', 'Status', 'Start Date','deadline', 'Cost',
-                  'Created By', 'Actions'];
+                $headers = ['Project Name', 'Status', 'Start Date', 'Deadline', 'Cost', 'Created By', 'Actions'];
                 $rows = [];
                 foreach ($projects as $project) {
                     $rows[] = [
-                        ' <a href="' . route('projects.details', $project->id) . '" class="text-blue-600 hover:underline">' . $project->name . '</a>',
+                        auth()->user()->can('view project details', $project)
+                            ? '<a href="' . route('projects.details', $project->id) . '" class="text-blue-600 hover:underline">' . $project->name . '</a>'
+                            : '<span class="text-gray-500">' . $project->name . '</span>',
                         $project->status->name,
                         \Carbon\Carbon::parse($project->start_date)->format('Y-m-d'),
                         \Carbon\Carbon::parse($project->deadline)->format('Y-m-d'),
                         $project->cost,
                         $project->user->name,
-                        '<a href="#" class="text-tertiary hover:text-tertiary edit-project" data-id="' . $project->id . '"   data-name="' . $project->name . '"
-                            data-status="' . $project->status->id . '"
-                            data-deadline="' . $project->deadline . '"
-                            data-start-date="' . $project->start_date . '"
-                            data-description="' . $project->description . '"
-                            data-cost="' . $project->cost . '">Edit</a>
-                         <a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-project" data-id="' . $project->id . '">Delete</a>',
+                        (auth()->user()->can('edit projects', $project)
+                            ? '<a href="#" class="text-tertiary hover:text-tertiary edit-project" data-id="' . $project->id . '"
+                                data-name="' . $project->name . '"
+                                data-status="' . $project->status->id . '"
+                                data-deadline="' . $project->deadline . '"
+                                data-start-date="' . $project->start_date . '"
+                                data-description="' . $project->description . '"
+                                data-cost="' . $project->cost . '">Edit</a>'
+                            : '') .
+                        (auth()->user()->can('delete projects', $project)
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-project" data-id="' . $project->id . '">Delete</a>'
+                            : ''),
                     ];
                 }
             @endphp
+
             <x-static-table :headers="$headers" :rows="$rows"/>
             <!-- end the table -->
             <div class="mt-4">

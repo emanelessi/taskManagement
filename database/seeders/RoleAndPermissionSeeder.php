@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RoleAndPermissionSeeder extends Seeder
 {
@@ -14,14 +15,75 @@ class RoleAndPermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        $permission1 = Permission::create(['name' => 'editor']);
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        // إنشاء الصلاحيات
+        $permissions = [
+            'view dashboard',
+            'view reports',
+            'view project report',
+            'view task report',
+            'manage comments',
+            'create comments',
+            'edit comments',
+            'delete comments',
+            'manage projects',
+            'create projects',
+            'edit projects',
+            'delete projects',
+            'view project details',
+            'manage statuses',
+            'create statuses',
+            'edit statuses',
+            'delete statuses',
+            'manage categories',
+            'create categories',
+            'edit categories',
+            'delete categories',
+            'manage tasks',
+            'create tasks',
+            'edit tasks',
+            'delete tasks',
+            'view task details',
+            'manage users',
+            'create users',
+            'edit users',
+            'delete users',
+            'manage settings',
+        ];
 
-        $role1 = Role::create(['name' => 'editor']);
-        $role2 = Role::create(['name' => 'admin']);
+        // إنشاء الصلاحيات
+        foreach ($permissions as $permission) {
+            Permission::create(['name' => $permission]);
+        }
 
-        $role1->givePermissionTo($permission1);
+        // إنشاء الأدوار
+        Role::create(['name' => 'administrator']);
+        Role::create(['name' => 'project manager']);
+        Role::create(['name' => 'team member']);
 
-        $role2->givePermissionTo(Permission::all());
+        // إعطاء الصلاحيات للأدوار
+        $administrator = Role::findByName('administrator');
+        $administrator->givePermissionTo(Permission::all()); // يعطي جميع الصلاحيات
+
+        $projectManager = Role::findByName('project manager');
+        $projectManager->givePermissionTo(Permission::all());
+
+        $teamMember = Role::findByName('team member');
+        $teamMember->givePermissionTo([
+            'view dashboard',
+            'create comments',
+            'manage projects',
+            'manage settings',
+            'manage tasks',
+            'create tasks',
+            'edit tasks',
+            'delete tasks',
+            'view project details',
+            'view task details',
+            'view reports',
+            'view project report',
+            'view task report',
+        ]);
     }
 }

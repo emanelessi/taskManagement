@@ -7,9 +7,11 @@
 
         <div class="md:flex justify-between">
             <div class="mb-4">
+                @can('create tasks')
                 <x-primary-button class="addTaskBtn">
                     + Add New Task
                 </x-primary-button>
+                @endcan
             </div>
             <div class="mb-4 md:w-4/12">
                 <form id="searchForm" method="GET" action="{{ route('tasks') }}">
@@ -34,7 +36,9 @@
                 $rows = [];
                 foreach ($tasks as $task) {
                     $rows[] = [
-                        ' <a href="' . route('tasks.details', $task->id) . '" class="text-blue-600 hover:underline">' . $task->title . '</a>',
+                       auth()->user()->can('view task details', $task)
+                            ? '<a href="' . route('tasks.details', $task->id) . '" class="text-blue-600 hover:underline">' . $task->title . '</a>'
+                            : '<span class="text-gray-500">' . $task->title . '</span>',
                          $task->priority,
                           \Carbon\Carbon::parse($task->due_date)->format('Y-m-d'),
                         \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d'),
@@ -42,7 +46,8 @@
                         $task->status->name ?? '-',
                         $task->project->name ?? '-',
                         $task->user->name ?? '-',
-                        '<a href="#" class="text-tertiary hover:text-tertiary editTask"
+                        (auth()->user()->can('edit tasks', $task)
+                            ? '<a href="#" class="text-tertiary hover:text-tertiary editTask"
                             data-id="' . $task->id . '"
                           data-title="' . $task->title . '"
                             data-description="' . $task->description . '"
@@ -52,8 +57,12 @@
         data-status-id="' . optional($task->status)->id . '"
         data-assigned-to="' . optional($task->user)->id . '"
         data-project-id="' . optional($task->project)->id . '"
-                            data-completed-at="' . $task->completed_at . '" >Edit</a>
-                         <a href="#" class="text-red-600 hover:text-red-900 ml-4  deleteTask" data-id="' . $task->id . '">Delete</a>',
+                            data-completed-at="' . $task->completed_at . '" >Edit</a>'
+                              : '') .
+                                (auth()->user()->can('delete tasks', $task)
+                            ? '
+                         <a href="#" class="text-red-600 hover:text-red-900 ml-4  deleteTask" data-id="' . $task->id . '">Delete</a>'
+                            : ''),
                     ];
                 }
             @endphp

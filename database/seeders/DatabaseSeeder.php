@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TasksTableSeeder::class);
         $this->call(CommentsTableSeeder::class);
         $this->call(AttachmentsTableSeeder::class);
+        $this->call(RoleAndPermissionSeeder::class);
 
     }
 }

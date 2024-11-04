@@ -3,7 +3,7 @@
         $categoryName = $taskGroup->first()->category->name ?? 'Category';
     @endphp
     <div class="lg:w-2/4 w-full task-group" data-category-id="{{ $categoryId }}">
-        <div class="flex justify-between bg-black/20 p-4 rounded-lg">
+        <div class="flex justify-between bg-sky-light p-4 rounded-lg">
             <div class="flex space-x-2 px-2">
                 <h2 class="text-md font-bold">{{ $categoryName }}</h2>
                 <h2 class="text-md font-bold text-tertiary">{{ $taskGroup->count() }}</h2>
@@ -26,15 +26,21 @@
                             {{ \Carbon\Carbon::parse($task->due_date)->format('d-m-Y') }}
                         </p>
                     </div>
-                    <a href="{{ route('tasks.details', $task->id) }}">
-                        <p class="font-bold m-4 text-tertiary hover:underline">{{ $task->title ?? 'Task Title' }}</p>
-                    </a>
+                    @if(auth()->user()->can('view task details', $task))
+                        <a href="{{ route('tasks.details', $task->id) }}">
+                            <p class="font-bold m-4 text-tertiary hover:underline">{{ $task->title ?? 'Task Title' }}</p>
+                        </a>
+                    @else
+                        <p class="font-bold m-4 text-tertiary">{{$task->title ?? 'Task Title' }}</p>
+                    @endif
+
                     <p class="m-4 break-words">{{ Str::limit($task->description, 50) ?? 'Task Description' }}</p>
                 </div>
             @endforeach
         </div>
         <div class="mt-2 ">
-            <div class="p-3 rounded-lg shadow mb-2 addTaskBtn" data-category-id="{{ $categoryId }}"  data-project-id="{{ $project->id ?? '' }}">
+            <div class="p-3 rounded-lg shadow mb-2 addTaskBtn" data-category-id="{{ $categoryId }}"
+                 data-project-id="{{ $project->id ?? '' }}">
                 <svg width="250" height="15" class="flex justify-center items-center mx-auto" viewBox="0 0 9 8"
                      fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M0.96 5.064V3.64H3.984V0.808H5.456V3.64H8.48V5.064H5.456V7.912H3.984V5.064H0.96Z"

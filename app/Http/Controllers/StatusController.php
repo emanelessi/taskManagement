@@ -12,9 +12,10 @@ class StatusController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Status::class);
         $query = $request->input('search');
         $statuses = Status::where('name', 'like', "%$query%")
-           ->orWhere('status', 'like', "%$query%")
+            ->orWhere('status', 'like', "%$query%")
             ->paginate(10);
 
         return view('cpanel.status.index', ['statuses' => $statuses]);
@@ -26,6 +27,7 @@ class StatusController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Status::class);
         $request->validate([
             'name' => 'required|string|max:255|unique:statuses,name',
             'status' => 'required|string|in:enable,disable',
@@ -46,6 +48,8 @@ class StatusController extends Controller
      */
     public function update(Request $request, Status $status)
     {
+        $this->authorize('update', $status);
+
         // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255|unique:statuses,name,' . $status->id,
@@ -65,8 +69,9 @@ class StatusController extends Controller
      */
     public function destroy($id)
     {
+        $status = Status::findOrFail($id);
+        $this->authorize('delete', $status);
         try {
-            $status = Status::findOrFail($id);
             $status->delete();
             return redirect()->route('status')->with('success', 'Status deleted successfully!');
         } catch (\Exception $e) {

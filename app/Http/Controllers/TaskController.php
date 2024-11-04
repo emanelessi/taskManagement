@@ -16,8 +16,13 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
+//        public function __construct()
+//    {
+//        $this->authorizeResource(Task::class, 'task');
+//    }
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Task::class);
         $projects = Project::all();
         $categories = Category::all();
         $statuses = Status::all();
@@ -62,20 +67,13 @@ class TaskController extends Controller
         ]);
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Task::class);
+
         $request->validate([
             'title' => 'required|string|max:255',
         ]);
@@ -103,6 +101,7 @@ class TaskController extends Controller
     public function show($id)
     {
         $task = Task::findOrFail($id);
+        $this->authorize('viewTaskDetails', $task);
         $project = Project::all();
         $attachment = $task->attachments;
         $comments = $task->comments;
@@ -113,18 +112,12 @@ class TaskController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Task $task)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Task $task)
     {
+        $this->authorize('update', Task::class);
+
         $request->validate([
             'title' => 'required|string|max:255',
         ]);
@@ -142,8 +135,9 @@ class TaskController extends Controller
      */
     public function destroy($id)
     {
+        $task = Task::findOrFail($id);
+        $this->authorize('delete', Task::class);
         try {
-            $task = Task::findOrFail($id);
             $task->delete();
             return redirect()->route('tasks')->with('success', 'Task deleted successfully!');
         } catch (\Exception $e) {
@@ -166,9 +160,10 @@ class TaskController extends Controller
         return response()->json(['success' => true]);
     }
 
-
     public function tasksByProject(Request $request, $projectId)
     {
+        $this->authorize('viewAny', Task::class);
+
         $projects = Project::all();
         $project = Project::findOrFail($projectId);
         $categories = Category::all();
@@ -189,11 +184,12 @@ class TaskController extends Controller
         ]);
     }
 
-    public function taskReport()
+    public function taskReport(Task $task)
     {
-        $projectNames = Project::select('name')->distinct()->pluck('name');
+        $this->authorize('viewTaskReport', $task);
+        $projectNames = Project::distinct()->pluck('name');
         $statuses = Task::with('status')->get()->pluck('status.name')->unique();
-        $priorities = Task::select('priority')->distinct()->pluck('priority')->unique();
+        $priorities = Task::distinct()->pluck('priority')->unique();
         $categories = Task::with('category')->get()->pluck('category.name')->unique();
         $createdBys = Task::with('user')->get()->pluck('user.name')->unique();
 
@@ -260,6 +256,5 @@ class TaskController extends Controller
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
-
 
 }

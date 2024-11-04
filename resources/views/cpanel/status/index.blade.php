@@ -4,9 +4,12 @@
         <x-alert type="error" :errors="$errors->all()"/>
         <div class="md:flex justify-between">
             <div class="mb-4">
-                <x-primary-button id="addStatusBtn">
-                    + Add New Status
-                </x-primary-button>
+                @can('create statuses')
+                    <x-primary-button id="addStatusBtn">
+                        + Add New Status
+                    </x-primary-button>
+                @endcan
+
             </div>
             <div class="mb-4 md:w-4/12">
                 <form id="searchForm" method="GET" action="{{ route('status') }}">
@@ -33,11 +36,13 @@
                         $status->name,
                         $status->status,
                         \Carbon\Carbon::parse($status->created_at)->format('Y-m-d'),
-                         '<a href="#" class="text-tertiary hover:text-tertiary edit-status" data-id="' . $status->id . '"   data-name="' . $status->name . '"
-                            data-status="' . $status->status . '"
-                         >Edit</a>
-                         <a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-status" data-id="' . $status->id . '">Delete</a>',
-                    ];
+                          (auth()->user()->can('edit statuses', $status)
+                            ? '<a href="#" class="text-tertiary hover:text-tertiary edit-status" data-id="' . $status->id . '"   data-name="' . $status->name . '"
+                            data-status="' . $status->status . '">Edit</a>'
+                            : '') .
+                            (auth()->user()->can('delete statuses', $status)
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-status" data-id="' . $status->id . '">Delete</a>'
+                            : ''), ];
                 }
             @endphp
 
@@ -61,7 +66,7 @@
                     </div>
                     <div class="mb-4">
                         <x-input-label>Status:</x-input-label>
-                        <select  name="status" id="editStatus"
+                        <select name="status" id="editStatus"
                                 class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                             <option value="">Select status</option>
                             <option value="enable" {{ $status->status == 'enable' ? 'selected' : '' }}>Enable</option>
@@ -104,7 +109,7 @@
 
                     <div class="mb-4">
                         <x-input-label> Status Name:</x-input-label>
-                        <x-text-input class="w-full" type="text" name="name"  required/>
+                        <x-text-input class="w-full" type="text" name="name" required/>
                     </div>
 
                     <div class="mb-4">
@@ -131,16 +136,16 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            <!--start storing models in variables -->
             const addStatusModal = document.getElementById('addStatusModal');
             const editStatusModal = document.getElementById('editStatusModal');
             const deleteStatusModal = document.getElementById('deleteStatusModal');
-            <!--end storing models in variables -->
 
-            <!--start open and close the model -->
-            document.getElementById('addStatusBtn').addEventListener('click', () => {
-                addStatusModal.classList.remove('hidden');
-            });
+            const addStatusBtn = document.getElementById('addStatusBtn');
+            if (addStatusBtn) {
+                addStatusBtn.addEventListener('click', () => {
+                    addStatusModal.classList.remove('hidden');
+                });
+            }
 
             document.getElementById('cancelAddStatus').addEventListener('click', () => {
                 addStatusModal.classList.add('hidden');
@@ -149,9 +154,7 @@
             document.getElementById('cancelEditStatus').addEventListener('click', () => {
                 editStatusModal.style.display = 'none';
             });
-            <!--end open and close the model -->
 
-            <!--start storing data in the model -->
             document.querySelectorAll('.edit-status').forEach(editButton => {
                 editButton.addEventListener('click', function () {
                     const statusId = this.dataset.id;
@@ -161,14 +164,11 @@
                     document.querySelector('input[name="name"]').value = statusName;
                     document.querySelector('select[name="status"]').value = statusStatus;
 
-
                     editStatusModal.setAttribute('action', `{{ route('status.update', '') }}/${statusId}`);
                     editStatusModal.style.display = 'flex';
                 });
             });
-            <!--end storing data in the model -->
 
-            <!--start process  in the delete model -->
             document.getElementById('cancelDeleteStatus').addEventListener('click', () => {
                 deleteStatusModal.style.display = 'none';
             });
@@ -181,21 +181,8 @@
                     deleteStatusModal.style.display = 'flex';
                 });
             });
-            <!--end process  in the delete model -->
-
         });
-        function handleSearchInput() {
-            const query = document.getElementById('searchInput').value;
-            if (query === '') {
-                window.location.href = "{{ route('status') }}";
-            } else {
-                fetch(`/status?search=${query}`)
-                    .then(response => response.text())
-                    .then(html => {
-                        document.querySelector('.table-container').innerHTML = html;
-                    });
-            }
-        }
+
     </script>
 
 </x-app-layout>

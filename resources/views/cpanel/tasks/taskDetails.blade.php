@@ -14,14 +14,19 @@
                         <div class="text-gray-800 font-medium">{{ $task->title }}</div>
                     </div>
                     <div class="flex space-x-2 px-2 ">
-                        <img src="{{ asset('image/icon/delete.svg') }}" alt="delete" width="15" class="deleteTask"
-                             data-id="{{ $task->id }}"/>
-                        <img src="{{ asset('image/icon/edit.svg') }}" alt="edit" width="20" class="editTask"
-                             data-id="{{ $task->id }}" data-title="{{ $task->title }}"
-                             data-description="{{ $task->description }}" data-due-date="{{ $task->due_date }}"
-                             data-priority="{{ $task->priority }}" data-category-id="{{ $task->category_id }}"
-                             data-status-id="{{ $task->status_id }}" data-project-id="{{ $task->project_id }}"
-                             data-completed-at="{{ $task->completed_at }}"/>
+                        @can('delete tasks')
+                            <img src="{{ asset('image/icon/delete.svg') }}" alt="delete" width="15" class="deleteTask"
+                                 data-id="{{ $task->id }}"/>
+                        @endcan
+                        @can('edit tasks')
+                            <img src="{{ asset('image/icon/edit.svg') }}" alt="edit" width="20" class="editTask"
+                                 data-id="{{ $task->id }}" data-title="{{ $task->title }}"
+                                 data-description="{{ $task->description }}" data-due-date="{{ $task->due_date }}"
+                                 data-priority="{{ $task->priority }}" data-category-id="{{ $task->category_id }}"
+                                 data-status-id="{{ $task->status_id }}" data-project-id="{{ $task->project_id }}"
+                                 data-completed-at="{{ $task->completed_at }}"/>
+                        @endcan
+
                     </div>
                 </div>
             </div>
@@ -102,23 +107,30 @@
                         <!-- Buttons for Edit and Delete -->
                         <div class="flex gap-4 mt-2 justify-end">
                             <!-- Edit Button SVG -->
-                            <button onclick="openEditModal({{ $comment->id }}, '{{ $comment->comment }}')"
-                                    class="text-blue-600 hover:text-blue-800">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                     stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M15.232 5.232a3 3 0 014.243 4.243L7.5 21H3v-4.5L15.232 5.232z"/>
-                                </svg>
-                            </button>
+                            @can('edit comments')
+                                <button onclick="openEditModal({{ $comment->id }}, '{{ $comment->comment }}')"
+                                        class="text-blue-600 hover:text-blue-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="2"
+                                         stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M15.232 5.232a3 3 0 014.243 4.243L7.5 21H3v-4.5L15.232 5.232z"/>
+                                    </svg>
+                                </button>
+                            @endcan
 
                             <!-- Delete Button SVG -->
-                            <button onclick="openDeleteModal({{ $comment->id }})"
-                                    class="text-red-600 hover:text-red-800">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
-                                     stroke="currentColor" class="w-5 h-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
+                            @can('delete comments')
+                                <button onclick="openDeleteModal({{ $comment->id }})"
+                                        class="text-red-600 hover:text-red-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                         stroke-width="2"
+                                         stroke="currentColor" class="w-5 h-5">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            @endcan
+
                         </div>
                     </div>
                 @endforeach
@@ -126,6 +138,7 @@
                     <div class="text-gray-500">No comments available.</div>
                 @endif
             </div>
+            @can('create comments')
             <div class="mb-6">
                 <form action="{{ route('comment.store') }}" method="POST">
                     @csrf
@@ -141,9 +154,12 @@
                     </div>
                 </form>
             </div>
+            @endcan
+
             <!-- Back Button -->
             <div class="flex justify-end mt-6 gap-4">
                 <!-- Edit Button -->
+                @can('edit tasks')
                 <x-primary-button href="#" class="editTask"
                                   data-id="{{ $task->id }}"
                                   data-title="{{ $task->title }}"
@@ -156,6 +172,8 @@
                                   data-completed-at="{{ $task->completed_at }} ">
                     Edit Task
                 </x-primary-button>
+                @endcan
+
                 <a href="{{ url('/tasks') }}">
                     <x-primary-button>Back</x-primary-button>
                 </a>

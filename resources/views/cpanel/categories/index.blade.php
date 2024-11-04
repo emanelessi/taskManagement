@@ -7,9 +7,12 @@
 
         <div class="md:flex justify-between">
             <div class="mb-4">
-                <x-primary-button class="addCategoryBtn">
-                    + Add New Category
-                </x-primary-button>
+                @can('create categories')
+                    <x-primary-button class="addCategoryBtn">
+                        + Add New Category
+                    </x-primary-button>
+                @endcan
+
             </div>
 
             <div class="mb-4 md:w-4/12">
@@ -38,11 +41,14 @@
                         $category->name,
                         $category->status,
                         \Carbon\Carbon::parse($category->created_at)->format('Y-m-d'),
-                        '<a href="#" class="text-tertiary hover:text-tertiary edit-category" data-id="' . $category->id . '"   data-name="' . $category->name . '"
+                         (auth()->user()->can('edit categories', $category)
+                            ? '<a href="#" class="text-tertiary hover:text-tertiary edit-category" data-id="' . $category->id . '"   data-name="' . $category->name . '"
                             data-status="' . $category->status . '"
-                         >Edit</a>
-                         <a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-category" data-id="' . $category->id . '">Delete</a>',
-                    ];
+                         >Edit</a>'
+                            : '') .
+                         (auth()->user()->can('delete categories', $category)
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-category" data-id="' . $category->id . '">Delete</a>'
+                    : ''), ];
                 }
             @endphp
 
@@ -163,6 +169,7 @@
             <!--end process  in the delete model -->
 
         });
+
         function handleSearchInput() {
             const query = document.getElementById('searchInput').value;
             if (query === '') {

@@ -24,20 +24,16 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-
-//Route::get('/reports', function () {
-//    return view('reports');
-//})->name('reports');
-
-//Route::get('/Task', function () {
-//    return view('task.index');
-//})->name('tasks');
-
-
 Route::get('/dashboard', function () {
     return view('cpanel.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::get('/check-permissions', function () {
+    $user = auth()->user();
+    return [
+        'roles' => $user->getRoleNames(),
+        'permissions' => $user->getAllPermissions(),
+    ];
+});
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -13,6 +13,13 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
+//    public function __construct()
+//    {
+//        $this->authorizeResource(Project::class, 'project', [
+//            'show' => 'viewProjectDetails',
+//        ]);
+//    }
+
     public function index(Request $request)
     {
         $query = $request->input('search');
@@ -34,6 +41,7 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Project::class);
         $request->validate([
             'name' => 'required|string|max:255|unique:projects,name',
         ], [
@@ -61,6 +69,7 @@ class ProjectController extends Controller
     public function show($id)
     {
         $project = Project::findOrFail($id);
+        $this->authorize('viewProjectDetails', $project);
         $status = Status::all();
         $user = User::all();
         $tasks = $project->tasks;
@@ -72,6 +81,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
+        $this->authorize('update', $project);
         $request->validate([
             'name' => 'required|string|max:255|unique:projects,name,' . $project->id,
         ]);
@@ -89,8 +99,9 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
+        $project = Project::findOrFail($id);
+        $this->authorize('delete', $project);
         try {
-            $project = Project::findOrFail($id);
             $project->delete();
             return redirect()->route('projects')->with('success', 'Project deleted successfully!');
         } catch (\Exception $e) {
@@ -98,8 +109,10 @@ class ProjectController extends Controller
         }
     }
 
-    public function projectReport()
+    public function projectReport(Project $project)
     {
+        $this->authorize('viewProjectReport', $project);
+
         $projectNames = Project::select('name')->distinct()->pluck('name');
         $statuses = Project::with('status')->get()->pluck('status.name')->unique();
 

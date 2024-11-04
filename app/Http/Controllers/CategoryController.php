@@ -12,6 +12,7 @@ class CategoryController extends Controller
      */
     public function index(Request $request)
     {
+        $this->authorize('viewAny', Category::class);
         $query = $request->input('search');
         $categories = Category::where('name', 'like', "%$query%")
             ->orWhere('status', 'like', "%$query%")
@@ -25,6 +26,8 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Category::class);
+
         // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name',
@@ -47,6 +50,8 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
+        $this->authorize('update', $category);
+
         // Validate the request data
         $request->validate([
             'name' => 'required|string|max:255|unique:categories,name,' . $category->id,
@@ -67,8 +72,9 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
+        $category = Category::findOrFail($id);
+        $this->authorize('delete', $category);
         try {
-            $category = Category::findOrFail($id);
             $category->delete();
             return redirect()->route('categories')->with('success', 'Category deleted successfully!');
         } catch (\Exception $e) {
