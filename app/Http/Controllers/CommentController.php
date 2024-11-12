@@ -7,21 +7,6 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -32,6 +17,7 @@ class CommentController extends Controller
 //            'comment' => 'required|string|max:255',
 //        ]);
         try {
+            $this->authorize('create', Comment::class);
             Comment::create([
                 'comment' => $request->comment,
                 'task_id' => $request->task_id,
@@ -43,31 +29,20 @@ class CommentController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Comment $comment)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Comment $comment)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
     {
+        $this->authorize('update', Comment::class);
         $comment = Comment::findOrFail($id);
-        $comment->update($request->only('comment'));
-
-        return redirect()->back()->with('success', 'Comment updated successfully.');
+        try {
+            $comment->update($request->only('comment'));
+            return redirect()->back()->with('success', 'Comment updated successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 
     /**
@@ -75,9 +50,14 @@ class CommentController extends Controller
      */
     public function destroy($id)
     {
+        $this->authorize('delete', Comment::class);
         $comment = Comment::findOrFail($id);
-        $comment->delete();
 
-        return redirect()->back()->with('success', 'Comment deleted successfully.');
+        try {
+            $comment->delete();
+            return redirect()->back()->with('success', 'Comment deleted successfully.');
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
+        }
     }
 }

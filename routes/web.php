@@ -7,6 +7,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\AttachmentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -27,13 +29,13 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('cpanel.dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/check-permissions', function () {
-    $user = auth()->user();
-    return [
-        'roles' => $user->getRoleNames(),
-        'permissions' => $user->getAllPermissions(),
-    ];
-});
+//Route::get('/check-permissions', function () {
+//    $user = auth()->user();
+//    return [
+//        'roles' => $user->getRoleNames(),
+//        'permissions' => $user->getAllPermissions(),
+//    ];
+//});
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -78,6 +80,13 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/task-report', [TaskController::class, 'taskReport'])->name('task.report');
     Route::post('/task-pdf', [TaskController::class, 'taskPdf'])->name('task.pdf');
+    Route::delete('/attachments/{attachment}', [AttachmentController::class, 'destroy'])->name('attachment.destroy');
+
+    Route::patch('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+
 });
 
 require __DIR__.'/auth.php';

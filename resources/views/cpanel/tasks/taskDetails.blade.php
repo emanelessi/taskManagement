@@ -7,7 +7,6 @@
         <div class="bg-white shadow-lg rounded-lg p-8">
             <div class="grid mb-5 gap-6">
                 <!-- Task Name -->
-
                 <div class="flex justify-between my-3">
                     <div class="flex items-center gap-2">
                         <p class="text-tertiary font-bold text-lg">Task Name:</p>
@@ -87,6 +86,68 @@
                 <div class="text-gray-800 leading-relaxed break-words">{{ $task->description }}</div>
             </div>
 
+            <div class="mb-6">
+                <h3 class="text-tertiary font-bold text-lg mb-4">Attachments:</h3>
+                <div class="overflow-x-auto">
+                    <div class="flex gap-4 min-w-max">
+                        @if ($attachment->isEmpty())
+                            <div class="text-gray-500">No Attachments available.</div>
+                        @else                        @foreach($task->attachments as $attachment)
+                            <div class="relative group">
+                                <div class="cursor-pointer">
+                                    @if(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['jpg', 'png', 'jpeg', 'gif']))
+                                        <!-- Image Preview -->
+                                        <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
+                                             class="w-32 h-32 object-cover rounded-lg transform transition-all duration-300 group-hover:scale-110"
+                                             onclick="openImageModal('{{ asset('storage/' . $attachment->file_path) }}')">
+                                    @elseif(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['pdf']))
+                                        <!-- PDF Preview -->
+                                        <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                           class="w-32 h-32 bg-gray-200 flex items-center justify-center text-center rounded-lg">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
+                                                 height="24" fill="none" stroke="currentColor" stroke-width="2"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path
+                                                    d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"></path>
+                                                <path d="M14 2v6h6"></path>
+                                            </svg>
+                                        </a>
+                                    @else
+                                        <!-- Other Files -->
+                                        <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
+                                           class="w-32 h-32 bg-gray-200 flex items-center justify-center text-center rounded-lg">
+                                            <p class="text-sm text-gray-700">Download File</p>
+                                        </a>
+                                    @endif
+                                </div>
+                                @can("delete attachments")
+                                    <button onclick="openAttachmentDeleteModal({{ $attachment->id }})"
+                                            class="absolute top-2 right-2 text-red-600 hover:text-red-800">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                             stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                  d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </button>
+                                @endcan
+                            </div>
+                        @endforeach
+                        @endif
+
+                    </div>
+                </div>
+            </div>
+            <!-- Image Modal -->
+            <div id="imageModal"
+                 class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full px-4">
+                    <img id="modalImage" src="" alt="Full-size Image" class="w-full h-auto rounded-lg">
+                    <button onclick="closeImageModal()"
+                            class="absolute top-4 right-4 text-white bg-red-600 hover:bg-red-700 p-2 px-4 rounded-full">
+                        X
+                    </button>
+                </div>
+            </div>
 
             <!-- Comments Section -->
             <div class="mb-6">
@@ -139,48 +200,33 @@
                 @endif
             </div>
             @can('create comments')
-            <div class="mb-6">
-                <form action="{{ route('comment.store') }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="task_id" value="{{ $task->id }}">
-                    <div class="mb-4">
-                        <label for="comment" class="block text-tertiary font-bold mb-2">Add a Comment:</label>
-                        <textarea name="comment" id="comment" rows="4"
-                                  class="w-full px-3 py-2 text-black border border-gray-300 rounded-lg"
-                                  required></textarea>
-                    </div>
-                    <div class="flex justify-end  gap-4">
-                        <x-primary-button type="submit">Submit Comment</x-primary-button>
-                    </div>
-                </form>
-            </div>
+                <div class="mb-6">
+                    <form action="{{ route('comment.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="task_id" value="{{ $task->id }}">
+                        <div class="mb-4">
+                            <x-input-label for="comment" class="block text-tertiary font-bold mb-2">Add a Comment:
+                            </x-input-label>
+                            <textarea name="comment" id="comment" rows="4"
+                                      class="w-full px-3 py-2 text-black border border-gray-300 rounded-lg"
+                                      required></textarea>
+                        </div>
+                        <div class="flex justify-end  gap-4">
+                            <x-primary-button type="submit">Submit Comment</x-primary-button>
+                        </div>
+                    </form>
+                </div>
             @endcan
 
             <!-- Back Button -->
             <div class="flex justify-end mt-6 gap-4">
-                <!-- Edit Button -->
-                @can('edit tasks')
-                <x-primary-button href="#" class="editTask"
-                                  data-id="{{ $task->id }}"
-                                  data-title="{{ $task->title }}"
-                                  data-description="{{ $task->description }}"
-                                  data-due-date="{{ $task->due_date }}"
-                                  data-priority="{{ $task->priority }}"
-                                  data-category-id="{{ $task->category_id }}"
-                                  data-status-id="{{ $task->status_id }}"
-                                  data-project-id="{{ $task->project_id }}"
-                                  data-completed-at="{{ $task->completed_at }} ">
-                    Edit Task
-                </x-primary-button>
-                @endcan
-
                 <a href="{{ url('/tasks') }}">
-                    <x-primary-button>Back</x-primary-button>
+                    <x-primary-button >Back</x-primary-button>
                 </a>
+            </div>
 
-                <x-edit-task-form :task="$task" :projects="$project" :categories="$category" :statuses="$status"/>
+            <x-edit-task-form :task="$task" :projects="$project" :categories="$category" :statuses="$status"/>
                 <x-delete-task-form :task="$task"/>
-
                 <!-- Edit Comment Modal -->
                 <div id="editCommentModal"
                      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
@@ -198,7 +244,6 @@
                         </form>
                     </div>
                 </div>
-
                 <!-- Delete Comment Modal -->
                 <div id="deleteCommentModal"
                      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
@@ -215,9 +260,22 @@
                         </div>
                     </div>
                 </div>
-
-
-            </div>
+                <div id="deleteAttachmentModal"
+                     class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+                    <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+                        <h2 class="text-xl font-semibold mb-4">Delete Attachment </h2>
+                        <p>Are you sure you want to delete this attachment ?</p>
+                        <div class="flex justify-end mt-4 gap-4">
+                            <x-danger-button type="button" onclick="closeAttachmentDeleteModal()">Cancel
+                            </x-danger-button>
+                            <form id="deleteAttachmentForm" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <x-primary-button type="submit">Delete</x-primary-button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
         </div>
     </div>
 
@@ -241,5 +299,26 @@
             document.getElementById('deleteCommentModal').classList.add('hidden');
         }
 
+        function openAttachmentDeleteModal(attachmentId) {
+            console.log("test")
+            document.getElementById('deleteAttachmentModal').classList.remove('hidden');
+            document.getElementById('deleteAttachmentForm').action = `/attachments/${attachmentId}`;
+        }
+
+        function closeAttachmentDeleteModal() {
+            document.getElementById('deleteAttachmentModal').classList.add('hidden');
+        }
+
+        function openImageModal(imageUrl) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = imageUrl;
+            modal.classList.remove('hidden');
+        }
+
+        // Close image modal
+        function closeImageModal() {
+            document.getElementById('imageModal').classList.add('hidden');
+        }
     </Script>
 </x-app-layout>

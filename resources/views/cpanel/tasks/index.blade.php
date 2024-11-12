@@ -40,8 +40,8 @@
                             ? '<a href="' . route('tasks.details', $task->id) . '" class="text-blue-600 hover:underline">' . $task->title . '</a>'
                             : '<span class="text-gray-500">' . $task->title . '</span>',
                          $task->priority,
-                          \Carbon\Carbon::parse($task->due_date)->format('Y-m-d'),
-                        \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d'),
+                        $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '-',
+                        $task->completed_at ? \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') : '-',
                       $task->category->name ?? '-',
                         $task->status->name ?? '-',
                         $task->project->name ?? '-',

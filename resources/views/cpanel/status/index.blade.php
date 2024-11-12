@@ -59,18 +59,18 @@
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Status</h2>
                     <div class="mb-4">
-                        <x-input-label>Status Name:</x-input-label>
+                        <x-input-label required>Status Name:</x-input-label>
                         <x-text-input class="w-full " type="text" name="name"
                                       id="editStatusName" value="{{ $status->name ?? '' }}"
                                       required/>
                     </div>
                     <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
+                        <x-input-label required>Status:</x-input-label>
                         <select name="status" id="editStatus"
                                 class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
                             <option value="">Select status</option>
-                            <option value="enable" {{ $status->status == 'enable' ? 'selected' : '' }}>Enable</option>
-                            <option value="disable" {{ $status->status == 'disable' ? 'selected' : '' }}>Disable
+                            <option value="enable" {{ isset($status->status) && $status->status == 'enable' ? 'selected' : '' }}>Enable</option>
+                            <option value="disable" {{ isset($status->status) && $status->status == 'disable' ? 'selected' : '' }}>Disable</option>
                             </option>
                         </select>
                     </div>
@@ -88,7 +88,7 @@
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('DELETE')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  my-14 z-30">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
                     <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"></span>?
                     </x-input-label>
@@ -108,12 +108,12 @@
                     <h2 class="text-lg font-semibold mb-4">Add New Status</h2>
 
                     <div class="mb-4">
-                        <x-input-label> Status Name:</x-input-label>
+                        <x-input-label required> Status Name:</x-input-label>
                         <x-text-input class="w-full" type="text" name="name" required/>
                     </div>
 
                     <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
+                        <x-input-label required>Status:</x-input-label>
                         <select name="status"
                                 class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required>
@@ -135,6 +135,7 @@
     </div>
 
     <script>
+
         document.addEventListener('DOMContentLoaded', () => {
             const addStatusModal = document.getElementById('addStatusModal');
             const editStatusModal = document.getElementById('editStatusModal');
@@ -182,7 +183,18 @@
                 });
             });
         });
-
+        function handleSearchInput() {
+            const query = document.getElementById('searchInput').value;
+            if (query === '') {
+                window.location.href = "{{ route('status') }}";
+            } else {
+                fetch(`/status?search=${query}`)
+                    .then(response => response.text())
+                    .then(html => {
+                        document.querySelector('.table-container').innerHTML = html;
+                    });
+            }
+        }
     </script>
 
 </x-app-layout>

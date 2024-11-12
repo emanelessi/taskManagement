@@ -39,7 +39,7 @@ class CategoryController extends Controller
         try {
             // Create a new category
             Category::create($request->only(['name', 'status']));
-            return redirect()->route('categories')->with('success', 'Category added successfully!');
+            return redirect()->back()->with('success', 'Category added successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
@@ -61,7 +61,7 @@ class CategoryController extends Controller
         try {
             // Update the category
             $category->update($request->only(['name', 'status']));
-            return redirect()->route('categories')->with('success', 'Category updated successfully!');
+            return redirect()->back()->with('success', 'Category updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }

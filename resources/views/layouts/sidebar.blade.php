@@ -18,6 +18,20 @@
                 </x-nav-link>
             @endcan
 
+            <!-- Projects Link -->
+            @can('manage projects')
+                <x-nav-link class="flex items-center" @click="activeTab = 'projects'">
+                    <a href="{{ route('projects') }}"
+                       class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
+                       :class="activeTab === 'projects' ||activeTab === 'projects.details'  ||activeTab === 'projects.tasks' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                        <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
+                            <img src="{{ asset('image/icon/projects.svg') }}" alt="projects" width="15"/>
+                        </div>
+                        <span>Projects</span>
+                    </a>
+                </x-nav-link>
+            @endcan
+
             <!-- Tasks Dropdown -->
             @can('manage tasks')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
@@ -43,26 +57,12 @@
                             @endcan
                         </div>
                         <div class="text-sm text-gray-600 my-3">
-                            @can('manage status')
+                            @can('manage statuses')
                                 <a href="{{ route('status') }}" class="hover:text-tertiary font-medium">Status</a>
                             @endcan
                         </div>
                     </div>
                 </li>
-            @endcan
-
-            <!-- Projects Link -->
-            @can('manage projects')
-                <x-nav-link class="flex items-center" @click="activeTab = 'projects'">
-                    <a href="{{ route('projects') }}"
-                       class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
-                       :class="activeTab === 'projects' ||activeTab === 'projects.details'  ||activeTab === 'projects.tasks' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
-                        <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
-                            <img src="{{ asset('image/icon/projects.svg') }}" alt="projects" width="15"/>
-                        </div>
-                        <span>Projects</span>
-                    </a>
-                </x-nav-link>
             @endcan
 
             <!-- Reports Dropdown -->
@@ -99,6 +99,19 @@
                 </li>
             @endcan
 
+            <!-- Settings Link -->
+            @can('manage users')
+                <x-nav-link class="flex items-center" @click="activeTab = 'users'">
+                    <a href="{{ route('users') }}"
+                       class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
+                       :class="activeTab === 'users' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                        <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
+                            <img src="{{ asset('image/icon/users.svg') }}" alt="users" width="15"/>
+                        </div>
+                        <span>Users</span>
+                    </a>
+                </x-nav-link>
+            @endcan
             <!-- Settings Link -->
             @can('manage settings')
                 <x-nav-link class="flex items-center" @click="activeTab = 'profile.edit'">

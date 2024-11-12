@@ -94,23 +94,23 @@
     @foreach ($tasks as $task)
         <tr>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ $task->id }}</td>
+                {{ $task->id}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
                 {{ $task->title }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ $task->priority }}</td>
+                {{ $task->priority  ?? '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ \Carbon\Carbon::parse($task->start_date)->format('Y-m-d') }}</td>
+                {{ $task->start_date ? \Carbon\Carbon::parse($task->start_date)->format('Y-m-d')   : '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
                 {{ $task->completed_at ? \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') : '-' }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ $task->category->name }}</td>
+                {{ $task->category->name  ?? '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ $task->status->name }}</td>
+                {{ $task->status->name  ?? '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ $task->project->name }}</td>
+                {{ $task->project->name  ?? '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
-                {{ $task->user->name }}</td>
+                {{ $task->user->name ?? '-'}}</td>
         </tr>
     @endforeach
     </tbody>

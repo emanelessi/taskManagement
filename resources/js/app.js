@@ -1,4 +1,5 @@
 import './bootstrap';
+import Sortable from 'sortablejs';
 
 
 import Alpine from 'alpinejs';

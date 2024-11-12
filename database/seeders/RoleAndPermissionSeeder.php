@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -49,6 +50,7 @@ class RoleAndPermissionSeeder extends Seeder
             'create users',
             'edit users',
             'delete users',
+            'delete attachments',
             'manage settings',
         ];
 
@@ -64,10 +66,14 @@ class RoleAndPermissionSeeder extends Seeder
 
         // إعطاء الصلاحيات للأدوار
         $administrator = Role::findByName('administrator');
-        $administrator->givePermissionTo(Permission::all()); // يعطي جميع الصلاحيات
+        $administrator->givePermissionTo(Permission::all());
+        $adminUser =  User::where('email', 'admin@admin.com')->first();
+        $adminUser->assignRole($administrator);
 
         $projectManager = Role::findByName('project manager');
         $projectManager->givePermissionTo(Permission::all());
+        $managerUser =  User::where('email', 'manager@admin.com')->first();
+        $managerUser->assignRole($projectManager);
 
         $teamMember = Role::findByName('team member');
         $teamMember->givePermissionTo([
@@ -85,5 +91,13 @@ class RoleAndPermissionSeeder extends Seeder
             'view project report',
             'view task report',
         ]);
+        // جلب جميع المستخدمين الذين يطابقون أحد العناوين
+        $teamUsers = User::whereIn('email', ['member1@admin.com', 'member2@admin.com', 'member3@admin.com', 'member4@admin.com'])->get();
+
+// تعيين دور "team member" لكل المستخدمين
+        foreach ($teamUsers as $teamUser) {
+            $teamUser->assignRole('team member');
+        }
+
     }
 }

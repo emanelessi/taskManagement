@@ -15,11 +15,6 @@ class Project extends Model
 
     protected $guarded = [];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
     public function status()
     {
         return $this->belongsTo(Status::class, 'status_id');
@@ -29,4 +24,34 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'project_user')
+            ->withPivot('role_id');
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function teamMembers()
+    {
+        return $this->belongsToMany(User::class, 'project_user')->withPivot('role_id');
+    }
+
+    // علاقة خاصة لمديري المشاريع
+    public function managers()
+    {
+        $managerRole = Role::where('name', 'project manager')->first();
+        if (!$managerRole) {
+            return $this->teamMembers()->whereRaw('1 = 0');
+        }
+
+        return $this->teamMembers()->wherePivot('role_id',$managerRole->id );
+    }
+
+
+
 }

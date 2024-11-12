@@ -1,12 +1,12 @@
 @props(['projects','task', 'categories', 'statuses'])
 
-<form id="editTaskModal" style="display: none;" method="POST"
+<form id="editTaskModal" style="display: none;" method="POST" enctype="multipart/form-data"
       action="{{ isset($task) ? route('tasks.update', ['task' => $task->id]) : '#' }}"
       class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
     @csrf
     @method('PATCH')
 
-    <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
+    <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
         <h2 class="text-lg font-semibold my-4">Edit Task</h2>
         <div class="mb-4">
             <x-input-label>Task Name:</x-input-label>
@@ -14,9 +14,9 @@
                           required></x-text-input>
         </div>
         <div class="mb-4">
-            <x-input-label>Project Name:</x-input-label>
+            <x-input-label required>Project Name:</x-input-label>
             <select name="project_id"
-                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
                 <option value="">Select Project</option>
                 @foreach($projects as $project)
                     <option
@@ -27,9 +27,9 @@
             </select>
         </div>
         <div class="mb-4">
-            <x-input-label>Category Name:</x-input-label>
+            <x-input-label required>Category Name:</x-input-label>
             <select name="category_id"
-                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
                 <option value="">Select Category</option>
                 @foreach($categories as $category)
                     <option
@@ -40,9 +40,9 @@
             </select>
         </div>
         <div class="mb-4">
-            <x-input-label>Status:</x-input-label>
+            <x-input-label required>Status:</x-input-label>
             <select name="status_id"
-                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
                 <option value="">Select Status</option>
                 @foreach($statuses as $status)
                     <option
@@ -53,10 +53,10 @@
             </select>
         </div>
         <div class="mb-4">
-            <x-input-label>priority:</x-input-label>
-            <select name="priority"
+            <x-input-label required>priority:</x-input-label>
+            <select name="priority" required
                     class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
-                    required>
+                    >
                 <option value="Low" {{ isset($task) && $task->priority == 'Low' ? 'selected' : '' }}>Low
                 </option>
                 <option value="Medium" {{ isset($task) && $task->priority == 'Medium' ? 'selected' : '' }}>
@@ -68,14 +68,14 @@
             </select>
         </div>
         <div class="mb-4">
-            <x-input-label>Due Date:</x-input-label>
-            <x-text-input class="w-full" type="date" name="due_date" value="{{ $task->due_date ?? '' }}"
-                          required></x-text-input>
+            <x-input-label required>Due Date:</x-input-label>
+            <x-text-input class="w-full" type="date" name="due_date" value=" {{ isset($task->due_date) ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
+                          required></x-text-inputrequired>
         </div>
         <div class="mb-4">
             <x-input-label>completed Date:</x-input-label>
             <x-text-input class="w-full" type="date" name="completed_at"
-                          value="{{ $task->completed_at ?? '' }}"></x-text-input>
+                          value="{{ isset($task->completed_at) ? \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') : '' }}"></x-text-input>
         </div>
         <div class="mb-4">
             <x-input-label>Description:</x-input-label>
@@ -83,10 +83,9 @@
                       class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">{{ $task->description ?? '' }}</textarea>
         </div>
         <div class="mb-4">
-            <x-input-label>image:</x-input-label>
-            <x-text-input
-                class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"
-                type="file" name="file_path"></x-text-input>
+            <x-input-label>Image:</x-input-label>
+            <x-text-input class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"
+                          type="file" name="attachments[]" id="attachments" multiple></x-text-input>
         </div>
         <div class="flex justify-end  gap-4">
             <x-danger-button type="button" id="cancelEditTask">Cancel</x-danger-button>
@@ -113,7 +112,7 @@
                 // Validate and convert 'data-completed-at'
                 const completedAtValue = this.getAttribute('data-completed-at');
                 const taskCompletedAt = completedAtValue ? new Date(completedAtValue).toLocaleDateString('en-CA') : '';
-
+// console.log(completedAtValue)
                 document.querySelector('#editTaskModal [name="title"]').value = taskTitle;
                 document.querySelector('#editTaskModal [name="description"]').value = taskDescription;
                 document.querySelector('#editTaskModal [name="due_date"]').value = taskDueDate;

@@ -5,12 +5,12 @@
         <h2 class="text-lg font-semibold mb-4">Add New Category</h2>
 
         <div class="mb-4">
-            <x-input-label>Category Name:</x-input-label>
+            <x-input-label required>Category Name:</x-input-label>
             <x-text-input class="w-full" type="text" name="name" required/>
         </div>
 
         <div class="mb-4">
-            <x-input-label>Status:</x-input-label>
+            <x-input-label required>Status:</x-input-label>
             <select name="status"
                     class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                     required>

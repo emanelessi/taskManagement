@@ -15,7 +15,7 @@
                         <!-- Status -->
                         <div class="flex items-center gap-2">
                             <p class="text-tertiary font-bold text-lg">Status:</p>
-                            <div class="text-gray-800   font-medium">{{ $project->status->name ?? 'غير متوفر' }}</div>
+                            <div class="text-gray-800   font-medium">{{ $project->status->name ?? '-' }}</div>
                         </div>
                         <!-- Cost -->
                         <div class="flex items-center gap-2">
@@ -40,9 +40,17 @@
                         <!-- Created By -->
                         <div class="flex items-center gap-2">
                             <p class="text-tertiary font-bold text-lg">Created By:</p>
-                            <div class="text-gray-800   font-medium">{{ $project->user->name }}</div>
+                            <div class="text-gray-800   font-medium">{{ $project->creator->name }}</div>
                         </div>
                     </div>
+                    <div class="grid grid-cols-1 gap-6 mt-4">
+                        <div class="flex items-center gap-2">
+                            <p class="text-tertiary font-bold text-lg">Team Members:</p>
+                            <div class="text-gray-800 font-medium">
+                                {{ $members}}
+                            </div>
+                        </div>
+                     </div>
                 </div>
 
                 <!-- Description -->

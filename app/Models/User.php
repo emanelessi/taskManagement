@@ -28,9 +28,14 @@ class User extends Authenticatable
         'deleted_at' => 'datetime',
     ];
 
-    public function projects()
+    public function createdProjects()
     {
         return $this->hasMany(Project::class, 'created_by');
+    }
+
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class, 'project_user')->withPivot('role_id'); // تعديل: استخدام role_id بدلاً من role
     }
 
     public function tasks()
@@ -40,12 +45,8 @@ class User extends Authenticatable
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany(Role::class);
+        return $this->belongsToMany(Role::class, 'role_user');
     }
-//    public function hasRole($roleName): bool
-//    {
-//        return $this->roles()->where('name', '=', $roleName)->exists();
-//    }
 
 
 

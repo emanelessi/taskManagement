@@ -67,20 +67,20 @@
                 <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Category</h2>
                     <div class="mb-4">
-                        <x-input-label>Category Name:</x-input-label>
+                        <x-input-label required>Category Name:</x-input-label>
                         <x-text-input class="w-full" type="text" name="name"
                                       id="editCategoryName" value="{{ $category->name ?? '' }}"
                                       required/>
                     </div>
 
                     <div class="mb-4">
-                        <x-input-label>Status:</x-input-label>
+                        <x-input-label required>Status:</x-input-label>
                         <select name="status" id="editCategoryStatus"
                                 class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
                                 required>
                             <option value="">Select status</option>
-                            <option value="enable" {{ $category->status == 'enable' ? 'selected' : '' }}>Enable</option>
-                            <option value="disable" {{ $category->status == 'disable' ? 'selected' : '' }}>Disable
+                            <option value="enable" {{ isset($category->status) && $category->status == 'enable' ? 'selected' : '' }}>Enable</option>
+                            <option value="disable" {{ isset($category->status) && $category->status == 'disable' ? 'selected' : '' }}>Disable</option>
                             </option>
                         </select>
                     </div>
@@ -101,7 +101,7 @@
                 @csrf
                 @method('DELETE')
 
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  my-14 z-30">
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
                     <x-input-label class="text-xl">Are you sure you want to delete<span id="deleteCategoryName"
                                                                                         class="font-bold"></span>?

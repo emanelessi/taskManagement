@@ -85,18 +85,18 @@
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium   w-1-6 break-words">
                 {{ $project->name }}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium  w-1-6 break-words">
-                {{ $project->status->name }}</td>
+                {{ $project->status->name ?? '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium  w-1-6 break-words">
-                {{ \Carbon\Carbon::parse($project->start_date)->format('Y-m-d') }}
+                {{  $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('Y-m-d'):"-" }}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium  w-1-6 break-words">
-                {{ \Carbon\Carbon::parse($project->deadline)->format('Y-m-d') }}
+                {{  $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('Y-m-d') :"-"}}
             </td>
 
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium  w-1-6 break-words">
-                {{ $project->cost }}</td>
+                {{ $project->cost ?? '-'}}</td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium  w-1-6 break-words">
-                {{ $project->user->name }}</td>
+                {{ $project->user->name ?? '-'}}</td>
         </tr>
     @endforeach
     </tbody>

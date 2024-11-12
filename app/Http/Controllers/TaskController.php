@@ -23,31 +23,50 @@ class TaskController extends Controller
     public function index(Request $request)
     {
         $this->authorize('viewAny', Task::class);
+        $user = auth()->user();
         $projects = Project::all();
-        $categories = Category::all();
-        $statuses = Status::all();
-
+        $categories = Category::where('status','enable')->get();
+        $statuses = Status::where('status','enable')->get();
         $tasksQuery = Task::with(['project', 'comments', 'attachments', 'user', 'category', 'status']);
         $query = $request->input('search');
 
         // Adjust the query for tasks
-        $tasks = $tasksQuery->where('title', 'like', "%$query%")
-            ->orWhereHas('project', function($q) use ($query) {
-                $q->where('name', 'like', "%$query%");
-            })
-            ->orWhereHas('status', function($q) use ($query) {
-                $q->where('name', 'like', "%$query%");
-            })->orWhereHas('category', function($q) use ($query) {
-                $q->where('name', 'like', "%$query%");
-            })
-            ->orWhereHas('user', function($q) use ($query) {
-                $q->where('name', 'like', "%$query%");
-            })
-            ->orWhere('priority', 'like', "%$query%")
-            ->orWhere('description', 'like', "%$query%")
-            ->paginate(10);
+        if ($user->hasRole('administrator')) {
+            $tasks = $tasksQuery->where('title', 'like', "%$query%")
+                ->orWhereHas('project', function ($q) use ($query) {
+                    $q->where('name', 'like', "%$query%");
+                })
+                ->orWhereHas('status', function ($q) use ($query) {
+                    $q->where('name', 'like', "%$query%");
+                })->orWhereHas('category', function ($q) use ($query) {
+                    $q->where('name', 'like', "%$query%");
+                })
+                ->orWhereHas('user', function ($q) use ($query) {
+                    $q->where('name', 'like', "%$query%");
+                })
+                ->orWhere('priority', 'like', "%$query%")
+                ->orWhere('description', 'like', "%$query%")
+                ->paginate(10);
+        }else {
+            $tasks = $tasksQuery->where('assigned_to', $user->id)->where(function($q) use ($query) {
+                $q->where('title', 'like', "%$query%")
+                    ->orWhereHas('project', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhereHas('status', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhereHas('category', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhereHas('user', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhere('priority', 'like', "%$query%")
+                    ->orWhere('description', 'like', "%$query%");
+            }) ->paginate(10);
+            }
 
-        // Assign a default value to $task to avoid "Undefined variable" error
         $task = null;
 
         foreach ($tasks as $t) {
@@ -63,7 +82,7 @@ class TaskController extends Controller
             'projects' => $projects,
             'categories' => $categories,
             'statuses' => $statuses,
-            'task' => $task, // Pass the default value
+            'task' => $task,
         ]);
     }
 
@@ -76,9 +95,11 @@ class TaskController extends Controller
 
         $request->validate([
             'title' => 'required|string|max:255',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpeg,png,jpg,pdf|max:10240',
         ]);
         try {
-            Task::create([
+            $task = Task::create([
                 'title' => $request->title,
                 'description' => $request->description,
                 'due_date' => $request->due_date,
@@ -89,6 +110,16 @@ class TaskController extends Controller
                 'completed_at' => $request->completed_at,
                 'assigned_to' => $request->user()->id,
             ]);
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    $path = $file->store('task_attachments', 'public');
+                    Attachment::create([
+                        'file_path' => $path,
+                        'task_id' => $task->id,
+                        'uploaded_by' => $request->user()->id,
+                    ]);
+                }
+            }
             return redirect()->back()->with('success', 'Task added successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
@@ -105,8 +136,8 @@ class TaskController extends Controller
         $project = Project::all();
         $attachment = $task->attachments;
         $comments = $task->comments;
-        $category = Category::all();
-        $status = Status::all();
+        $category = Category::where('status','enable')->get();
+        $status = Status::where('status','enable')->get();
         $user = User::all();
         return view('cpanel.tasks.taskDetails', compact('task', 'comments', 'attachment', 'category', 'project', 'status', 'user'));
     }
@@ -117,13 +148,34 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         $this->authorize('update', Task::class);
-
         $request->validate([
             'title' => 'required|string|max:255',
+            'attachments' => 'nullable|array',
+            'attachments.*' => 'file|mimes:jpeg,png,jpg,pdf|max:10240',
         ]);
 
         try {
-            $task->update($request->only(['title', 'description', 'due_date', 'priority', 'category_id', 'status_id', 'project_id', 'completed_at', 'assigned_to']));
+            $task->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'due_date' => $request->due_date,
+                'priority' => $request->priority,
+                'category_id' => $request->category_id,
+                'status_id' => $request->status_id,
+                'project_id' => $request->project_id,
+                'completed_at' => $request->completed_at,
+                'assigned_to' => $request->assigned_to,
+            ]);
+            if ($request->hasFile('attachments')) {
+                foreach ($request->file('attachments') as $file) {
+                    $path = $file->store('task_attachments', 'public');
+                    Attachment::create([
+                        'file_path' => $path,
+                        'task_id' => $task->id,
+                        'uploaded_by' => $request->user()->id,
+                    ]);
+                }
+            }
             return redirect()->back()->with('success', 'Tasks updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
@@ -166,8 +218,8 @@ class TaskController extends Controller
 
         $projects = Project::all();
         $project = Project::findOrFail($projectId);
-        $categories = Category::all();
-        $statuses = Status::all();
+        $categories = Category::where('status','enable')->get();
+        $statuses = Status::where('status','enable')->get();
 
         $tasks = Task::with(['project', 'comments', 'user', 'category', 'status'])
             ->where('project_id', $projectId)
@@ -196,11 +248,11 @@ class TaskController extends Controller
         return view('cpanel.reports.Tasks.index', compact('projectNames', 'statuses', 'priorities', 'categories', 'createdBys'));
     }
 
-
     public function taskPdf(Request $request)
     {
         try {
             $query = Task::query();
+
 
             if ($request->filled('project_name')) {
                 $query->whereHas('project', function ($q) use ($request) {
@@ -249,12 +301,10 @@ class TaskController extends Controller
                 'title' => $request->input('title', __('Task Report')),
                 'content' => $tasks->count(),
             ];
-
             $pdf = Pdf::loadView('cpanel.reports.tasks.pdf.taskReport', $data)->setPaper('a4', 'landscape');
             return $pdf->download('task_report.pdf');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
-
 }

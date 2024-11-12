@@ -1,5 +1,5 @@
 <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-    <table class="min-w-full bg-white">
+    <table class="min-w-full bg-white ">
         <thead class="bg-secondary/20 border-b border-quaternary/30">
         <tr>
             @foreach($headers as $header)

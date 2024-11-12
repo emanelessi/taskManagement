@@ -66,6 +66,7 @@
             <div class="bg-white p-4 shadow-lg rounded-lg">
                 <div class="container mx-auto">
                     {!! $chart->container() !!}
+
                 </div>
             </div>
             <!-- رسم بياني للمهام -->

@@ -19,9 +19,9 @@ class TaskPolicy
     /**
      * Determine if the user can view the task.
      */
-    public function view(User $user, Task $task)
+    public function view(User $user )
     {
-        return $user->id === $task->assigned_to || $user->hasRole('administrator') ||$user->hasPermission('manage tasks');
+        return $user->hasRole('administrator') ||$user->hasPermissionTo('manage tasks');
     }
 
     /**
@@ -29,23 +29,23 @@ class TaskPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create tasks');
+        return $user->hasPermissionTo('create tasks');
     }
 
     /**
      * Determine if the user can update the task.
      */
-    public function update(User $user, Task $task)
+    public function update(User $user )
     {
-        return $user->id === $task->assigned_to ||$user->hasRole('administrator') || $user->hasPermission('edit tasks');
+        return  $user->hasRole('administrator') || $user->hasPermissionTo('edit tasks');
     }
 
     /**
      * Determine if the user can delete the task.
      */
-    public function delete(User $user, Task $task)
+    public function delete(User $user )
     {
-        return $user->id === $task->assigned_to || $user->hasRole('administrator') ||$user->hasPermission('delete tasks');
+        return  $user->hasRole('administrator') ||$user->hasPermissionTo('delete tasks');
     }
 
     public function viewTaskDetails(User $user,  Task $task)

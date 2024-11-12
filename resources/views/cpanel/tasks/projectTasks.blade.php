@@ -15,7 +15,7 @@
         </div>
         <div class="md:flex  my-4 w-full">
             <div id="task-board" class="md:flex justify-between w-full md:space-x-4">
-                <x-task-board :tasks="$tasks ?? []"/>
+                <x-task-board :tasks="$tasks ?? []" :project="$project"/>
                 <div class="lg:w-2/4 w-full ">
                     <div class="flex justify-between bg-sky-light p-4 rounded-lg">
                         <div class="flex space-x-2 px-2 ">
@@ -29,7 +29,7 @@
                     </div>
                     <div class="mt-2">
                         @can('create tasks')
-                        <div class=" p-3 rounded-lg shadow mb-2 addTaskBtn">
+                        <div class=" p-3 rounded-lg shadow mb-2 addTaskBtn"  data-project-id="{{ $project->id ?? '' }}">
                             <svg width="250" height="15"
                                  class="flex justify-center items-center mx-auto"
                                  viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">

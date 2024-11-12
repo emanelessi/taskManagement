@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Role;
 use App\Models\Status;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -22,19 +23,43 @@ class ProjectController extends Controller
 
     public function index(Request $request)
     {
+        $user = auth()->user();
         $query = $request->input('search');
-        $projects = Project::where('name', 'like', "%$query%")
-            ->orWhereHas('status', function($q) use ($query) {
-                $q->where('name', 'like', "%$query%");
-            })
-            ->orWhereHas('user', function($q) use ($query) {
-                $q->where('name', 'like', "%$query%");
-            })->orWhere('cost', 'like', "%$query%")
-            ->paginate(10);
 
-        $status = Status::all();
-        return view('cpanel.projects.index', ['projects' => $projects, 'status' => $status]);
+        // تحقق من إذا كان المستخدم هو "administrator"
+        if ($user->hasRole('administrator')) {
+            $projects = Project::where(function ($q) use ($query) {
+                $q->where('name', 'like', "%$query%")
+                    ->orWhereHas('status', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhereHas('users', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhere('cost', 'like', "%$query%");
+            })
+                ->paginate(10);
+        }
+        else {
+            $projects = $user->projects()->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%$query%")
+                    ->orWhereHas('status', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhereHas('users', function ($q) use ($query) {
+                        $q->where('name', 'like', "%$query%");
+                    })
+                    ->orWhere('cost', 'like', "%$query%");
+            })
+                ->paginate(10);
+        }
+
+        $status = Status::where('status', 'enable')->get();
+        $users = User::all();
+
+        return view('cpanel.projects.index', compact('projects', 'status', 'users'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -44,11 +69,14 @@ class ProjectController extends Controller
         $this->authorize('create', Project::class);
         $request->validate([
             'name' => 'required|string|max:255|unique:projects,name',
+            'project_manager' => 'required|exists:users,id',
+            'team_members' => 'nullable|array',
+            'team_members.*' => 'exists:users,id',
         ], [
             'name.unique' => 'The project name already exists. Please choose another name.',
         ]);
         try {
-            Project::create([
+            $project = Project::create([
                 'name' => $request->name,
                 'description' => $request->description,
                 'status_id' => $request->status,
@@ -57,7 +85,15 @@ class ProjectController extends Controller
                 'cost' => $request->cost,
                 'created_by' => $request->user()->id,
             ]);
-            return redirect()->route('projects')->with('success', 'Project added successfully!');
+            // تعيين المدير
+            $project->users()->attach($request->project_manager, ['role_id' => Role::where('name', 'project manager')->first()->id]);
+
+            // تعيين أعضاء الفريق
+            if ($request->has('team_members')) {
+                $project->users()->attach($request->team_members, ['role_id' => Role::where('name', 'team member')->first()->id]);
+            }
+
+            return redirect()->back()->with('success', 'Project added successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
@@ -73,8 +109,15 @@ class ProjectController extends Controller
         $status = Status::all();
         $user = User::all();
         $tasks = $project->tasks;
-        return view('cpanel.projects.projectDetails', compact('project', 'tasks', 'status', 'user'));
+
+        $members = $project->teamMembers->filter(function ($member) {
+            return $member->pivot->role_id == 3;
+        })->pluck('name')->implode(', ');
+        $members = $members ?: '-';
+
+        return view('cpanel.projects.projectDetails', compact('project', 'tasks', 'status', 'user', 'members'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -82,17 +125,45 @@ class ProjectController extends Controller
     public function update(Request $request, Project $project)
     {
         $this->authorize('update', $project);
+//dd($request);
         $request->validate([
             'name' => 'required|string|max:255|unique:projects,name,' . $project->id,
         ]);
 
         try {
-            $project->update($request->only(['name', 'description', 'cost', 'start_date', 'deadline', 'status_id']));
-            return redirect()->route('projects')->with('success', 'Project updated successfully!');
+            $project->update([
+                'name' => $request->name,
+                'description' => $request->description,
+                'cost' => $request->cost,
+                'start_date' => $request->start_date,
+                'deadline' => $request->deadline,
+                'status_id' => $request->status,
+            ]);
+            $usersToSync = [];
+            if ($request->project_manager) {
+                $usersToSync[$request->project_manager] = [
+                    'role_id' => Role::where('name', 'project manager')->first()->id
+                ];
+            }
+
+            if ($request->has('team_members')) {
+                foreach ($request->team_members as $teamMember) {
+                    $usersToSync[$teamMember] = [
+                        'role_id' => Role::where('name', 'team member')->first()->id
+                    ];
+                }
+            }
+
+            if (!empty($usersToSync)) {
+                $project->users()->sync($usersToSync);
+            }
+
+            return redirect()->back()->with('success', 'Project updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -117,7 +188,7 @@ class ProjectController extends Controller
         $statuses = Project::with('status')->get()->pluck('status.name')->unique();
 
         $costs = Project::select('cost')->distinct()->pluck('cost');
-        $createdBys = Project::with('user')->get()->pluck('user.name')->unique();
+        $createdBys = Project::with('users')->get()->pluck('user.name')->unique();
 
         return view('cpanel.reports.projects.index', compact('projectNames', 'statuses', 'costs', 'createdBys'));
     }

@@ -37,7 +37,7 @@ class StatusController extends Controller
 
         try {
             Status::create($request->only(['name', 'status']));
-            return redirect()->route('status')->with('success', 'Status added successfully!');
+            return redirect()->back()->with('success', 'Status added successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
@@ -58,7 +58,7 @@ class StatusController extends Controller
 
         try {
             $status->update($request->only(['name', 'status']));
-            return redirect()->route('status')->with('success', 'Status updated successfully!');
+            return redirect()->back()->with('success', 'Status updated successfully!');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }

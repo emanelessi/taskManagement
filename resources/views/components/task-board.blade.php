@@ -1,3 +1,5 @@
+@props(['project', 'tasks' ])
+
 @foreach($tasks as $categoryId => $taskGroup)
     @php
         $categoryName = $taskGroup->first()->category->name ?? 'Category';
@@ -15,12 +17,23 @@
         <div class="mt-2 tasks-list">
             @foreach($taskGroup as $task)
                 <div class="bg-white p-3 rounded-lg shadow mb-2 task" data-task-id="{{ $task->id }}">
-                    @foreach($task->attachments as $attachment)
-                        <img src="{{ asset('image/icon/' . $attachment->file_path) }}" alt="Attachment Image"
-                             class="flex justify-center m-4 mx-auto w-full"/>
-                    @endforeach
-                    <div class="flex gap-6 justify-between ">
-                        <h3 class="bg-tertiary/30 flex font-semibold items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</h3>
+                    @if($task->attachments->isNotEmpty())
+                        @php
+                            $latestAttachment = $task->attachments->sortByDesc('created_at')->first();
+                        @endphp
+                        <img src="{{ asset('storage/' . $latestAttachment->file_path) }}" alt="Latest Attachment Image"
+                             class="flex justify-center m-4 mx-auto w-1/2 h-1/2"/>
+                    @else
+                        <p></p>
+                    @endif
+                        <div class="flex gap-6 justify-between ">
+                            @if($task->priority == 'High')
+                                <h3 class="bg-red-300 flex font-semibold items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</h3>
+                            @elseif($task->priority == 'Medium')
+                                    <h3 class="bg-tertiary/30 flex font-semibold items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</h3>
+                            @else
+                                <h3 class="bg-amber-200 flex font-semibold items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</h3>
+                            @endif
                         <p class="bg-red-600 w-1/2 py-1 justify-center items-center rounded-md flex gap-2 text-white">
                             <img src="{{ asset('image/icon/hourglass.svg') }}" alt="hourglass" class="w-4 h-4"/>
                             {{ \Carbon\Carbon::parse($task->due_date)->format('d-m-Y') }}

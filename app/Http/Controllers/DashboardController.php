@@ -11,7 +11,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $projects = Project::with('status')->get();
+        $projects = Project::with('status')->whereNotNull('status_id')->get();
 
         $chart = new Chart();
         $chart->title(__('Projects'))
@@ -26,6 +26,7 @@ class DashboardController extends Controller
                     '#32CD32', '#BA55D3', '#20B2AA', '#FF4500', '#4682B4',
                 ],
             ]);
+//        dd($chart);
 
         $project = Project::get();
         $cost = new Chart();
