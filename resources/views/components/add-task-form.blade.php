@@ -72,8 +72,8 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label>Image:</x-input-label>
-            <x-text-input class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"
+            <x-input-label>Image: </x-input-label>
+            <x-text-input class="w-full p-2 border px-3 py-2 mt-2 text-sm border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary file:rounded-full   file:bg-gray-200 file:text-gray-700 file:text-sm file:px-4 file:py-1 file:border-none "
                           type="file" name="attachments[]" id="attachments" multiple></x-text-input>
         </div>
 
