@@ -4,7 +4,7 @@
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
 
-        <div class="bg-white shadow-lg rounded-lg p-8">
+        <div class="bg-sky-light/10 shadow-lg rounded-lg p-8">
             <div class="grid mb-5 gap-6">
                 <!-- Task Name -->
                 <div class="flex justify-between my-3">
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <!-- Section with Background -->
-            <div class="bg-gradient-to-r from-quaternary/30 to-tertiary/10 p-6 rounded-lg mb-6 shadow-inner">
+            <div class="bg-gradient-to-r from-sky-light/10 to-sky-light/60  p-6 rounded-lg mb-6 shadow-inner">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Project -->
                     <div class="flex items-center gap-2">
@@ -98,7 +98,7 @@
                                     @if(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['jpg', 'png', 'jpeg', 'gif']))
                                         <!-- Image Preview -->
                                         <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
-                                             class="w-32 h-32 object-cover rounded-lg transform transition-all duration-300 group-hover:scale-110"
+                                             class="w-32 h-32   rounded-lg transform transition-all duration-300 group-hover:scale-110"
                                              onclick="openImageModal('{{ asset('storage/' . $attachment->file_path) }}')">
                                     @elseif(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['pdf']))
                                         <!-- PDF Preview -->

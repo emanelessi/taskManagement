@@ -29,7 +29,7 @@
             </div>
         </div>
         <!-- start the table -->
-        <div class="overflow-x-auto shadow-md rounded-lg">
+        <div class="overflow-x-auto shadow-md rounded-lg ">
             @php
                 $headers = ['Task Title',  'priority', 'Start Date','Completed Date', 'category', 'Status','project',
                   'Assigned To', 'Actions'];

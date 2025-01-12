@@ -3,7 +3,7 @@
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
 
-        <div class="bg-white p-3 rounded-xl mx-auto flex justify-center font-bold">
+        <div class="bg-secondary/5  p-3 rounded-xl mx-auto flex justify-center font-bold">
             @if(auth()->user()->can('view project details', $project))
                 <a href="{{ route('projects.details', $project->id) }}" class="text-tertiary hover:underline">
                     {{ $project->name ?? 'Project Name' }}
@@ -17,7 +17,7 @@
             <div id="task-board" class="md:flex justify-between w-full md:space-x-4">
                 <x-task-board :tasks="$tasks ?? []" :project="$project"/>
                 <div class="lg:w-2/4 w-full ">
-                    <div class="flex justify-between bg-sky-light p-4 rounded-lg">
+                    <div class="flex justify-between bg-secondary/10 p-4 rounded-lg">
                         <div class="flex space-x-2 px-2 ">
                             <h2 class="text-md font-bold">ADD MORE TOPIC</h2>
                         </div>
@@ -29,7 +29,7 @@
                     </div>
                     <div class="mt-2">
                         @can('create tasks')
-                        <div class=" p-3 rounded-lg shadow mb-2 addTaskBtn"  data-project-id="{{ $project->id ?? '' }}">
+                        <div class=" p-3 rounded-lg bg-secondary/5  shadow mb-2 addTaskBtn"  data-project-id="{{ $project->id ?? '' }}">
                             <svg width="250" height="15"
                                  class="flex justify-center items-center mx-auto"
                                  viewBox="0 0 9 8" fill="none" xmlns="http://www.w3.org/2000/svg">

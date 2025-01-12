@@ -2,10 +2,10 @@
     <div class="flex-1 overflow-auto">
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
-        <div class="bg-white shadow-lg rounded-lg p-8">
+        <div class="bg-sky-light/10 shadow-lg rounded-lg p-8">
             <div class="grid mb-5 gap-6">
                 <!-- Section with Background -->
-                <div class="bg-gradient-to-r from-quaternary/30 to-tertiary/10 p-6 rounded-lg mb-6 shadow-inner">
+                <div class="bg-gradient-to-r from-sky-light/10 to-sky-light/60 p-6 rounded-lg mb-6 shadow-inner">
                     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                         <!-- Project Name -->
                         <div class="flex items-center gap-2">

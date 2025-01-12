@@ -1,5 +1,5 @@
 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-       class="md:block hidden bg-sky-light text-gray-900 shadow-lg p-4 w-64 fixed h-full transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
+       class="md:block hidden bg-secondary/5 text-gray-900 shadow-lg p-4 w-64 fixed h-full transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
     <div class="text-2xl font-semibold mb-8 block md:hidden text-center text-gray-800">Task Management</div>
 
     <nav x-data="{ open: false, activeTab: '{{ Route::currentRouteName() }}' }" class="m-2">
@@ -35,7 +35,7 @@
             <!-- Tasks Dropdown -->
             @can('manage tasks')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
-                    <div class="flex items-center cursor-pointer" @click="open = !open"
+                    <div class="flex items-center cursor-pointer w-full" @click="open = !open"
                          :class="activeTab === 'tasks' || activeTab === 'categories' || activeTab === 'status'||activeTab === 'tasks.details'  ? 'bg-tertiary text-white w-full rounded-md shadow-md' : 'text-gray-800 hover:w-full hover:rounded-md hover:bg-tertiary hover:text-white hover:shadow-md'">
                         <a href="{{ route('tasks') }}" class="flex items-center gap-3 py-3 px-5">
                             <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
@@ -44,7 +44,7 @@
                             <span>Tasks</span>
                         </a>
                         <svg :class="open ? 'rotate-180' : ''" class="w-4 h-4 ml-auto mx-4 transition-transform"
-                             fill="#fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             fill="#8c97a8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M19 9l-7 7-7-7"></path>
                         </svg>
@@ -68,7 +68,7 @@
             <!-- Reports Dropdown -->
             @can('view reports')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
-                    <div class="flex items-center cursor-pointer" @click="open = !open"
+                    <div class="flex items-center cursor-pointer w-full" @click="open = !open"
                          :class="activeTab === 'Reports' || activeTab === 'project.report' || activeTab === 'task.report' ? 'bg-tertiary text-white w-full rounded-md shadow-md' : 'text-gray-800 hover:w-full hover:rounded-md hover:bg-tertiary hover:text-white hover:shadow-md'">
                         <a href="#" class="flex items-center gap-3 py-3 px-5">
                             <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
@@ -77,7 +77,7 @@
                             <span>Reports</span>
                         </a>
                         <svg :class="open ? 'rotate-180' : ''" class="w-4 h-4 ml-auto mr-4 transition-transform"
-                             fill="#fff" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                             fill="#8c97a8" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M19 9l-7 7-7-7"></path>
                         </svg>

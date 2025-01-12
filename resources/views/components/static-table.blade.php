@@ -9,7 +9,7 @@
             @endforeach
         </tr>
         </thead>
-        <tbody class="divide-y divide-quaternary/30">
+        <tbody class="divide-y divide-quaternary/30 bg-secondary/5 ">
         @foreach($rows as $row)
             <tr>
                 @foreach($row as $key => $cell)

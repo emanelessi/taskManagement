@@ -23,7 +23,7 @@ export default {
                 transparent: 'transparent',
                 primary: '#F3F4F8',
                 secondary: '#8C97A8',
-                tertiary: '#5051F9',
+                tertiary: '#40407b',
                 quaternary: '#94A2BC',
                 black: '#23235F',
                 white: '#FFFFFF',
