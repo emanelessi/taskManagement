@@ -1,15 +1,15 @@
-<div class="overflow-x-auto bg-white shadow-md rounded-lg">
+<div class="overflow-x-auto shadow-md rounded-lg">
     <table class="min-w-full bg-white ">
-        <thead class="bg-secondary/20 border-b border-quaternary/30">
+        <thead class="bg-button  border-b border-quaternary">
         <tr>
             @foreach($headers as $header)
-                <th class="px-6 py-3 text-left text-sm font-medium text-black uppercase tracking-wider">
+                <th class="px-6 py-3 text-left text-sm font-medium text-secondary uppercase tracking-wider">
                     {{ $header }}
                 </th>
             @endforeach
         </tr>
         </thead>
-        <tbody class="divide-y divide-quaternary/30 bg-secondary/5 ">
+        <tbody class="divide-y divide-quaternary/30  ">
         @foreach($rows as $row)
             <tr>
                 @foreach($row as $key => $cell)
@@ -28,7 +28,7 @@
                     </td>
                     @else
                         <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm font-medium text-black/80">   {!! $cell !!}</div>
+                            <div class="text-sm font-medium text-black/70">   {!! $cell !!}</div>
                         </td>
                     @endif
                 @endforeach

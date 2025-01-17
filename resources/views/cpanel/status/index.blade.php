@@ -16,10 +16,10 @@
                     <div class="relative w-full">
                         <input type="text" name="search" id="searchInput" placeholder="Search"
                                value="{{ request('search') }}"
-                               class="text-sm border border-secondary w-full bg-primary rounded-md"
+                               class="text-sm border border-black w-full bg-background rounded-md"
                                oninput="handleSearchInput()">
                         <button type="submit"
-                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg">
+                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-text bg-tertiary rounded-e-lg">
                             <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4">
                         </button>
                     </div>
@@ -56,7 +56,7 @@
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Status</h2>
                     <div class="mb-4">
                         <x-input-label required>Status Name:</x-input-label>
@@ -67,7 +67,7 @@
                     <div class="mb-4">
                         <x-input-label required>Status:</x-input-label>
                         <select name="status" id="editStatus"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">
+                                class="w-full border-black    focus:border-indigo-500  focus:ring-indigo-500   rounded-md shadow-sm">
                             <option value="">Select status</option>
                             <option value="enable" {{ isset($status->status) && $status->status == 'enable' ? 'selected' : '' }}>Enable</option>
                             <option value="disable" {{ isset($status->status) && $status->status == 'disable' ? 'selected' : '' }}>Disable</option>
@@ -88,7 +88,7 @@
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('DELETE')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
                     <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"></span>?
                     </x-input-label>
@@ -104,7 +104,7 @@
             <form id="addStatusModal" method="POST" action="{{ route('status.store') }}"
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Status</h2>
 
                     <div class="mb-4">
@@ -115,7 +115,7 @@
                     <div class="mb-4">
                         <x-input-label required>Status:</x-input-label>
                         <select name="status"
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="w-full border-black focus:border-indigo-500  focus:ring-indigo-500   rounded-md shadow-sm"
                                 required>
                             <option value="">Select status</option>
                             <option value="enable">Enable</option>

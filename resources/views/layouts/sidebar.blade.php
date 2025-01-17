@@ -1,7 +1,6 @@
 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-       class="md:block hidden bg-secondary/5 text-gray-900 shadow-lg p-4 w-64 fixed h-full transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
-    <div class="text-2xl font-semibold mb-8 block md:hidden text-center text-gray-800">Task Management</div>
-
+       class="md:block hidden bg-secondary/5 text-text shadow-lg p-4 w-64 fixed h-full transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
+    <div class="text-2xl font-semibold mb-8 block md:hidden text-center text-text">Task Management</div>
     <nav x-data="{ open: false, activeTab: '{{ Route::currentRouteName() }}' }" class="m-2">
         <ul>
             <!-- Dashboard Link -->
@@ -9,7 +8,7 @@
                 <x-nav-link class="flex items-center" @click="activeTab = 'dashboard'">
                     <a href="{{ route('dashboard') }}"
                        class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
-                       :class="activeTab === 'dashboard' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                       :class="activeTab === 'dashboard' ? 'bg-tertiary text-white shadow-md' : 'text-text hover:bg-tertiary hover:text-white hover:shadow-lg'">
                         <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
                             <img src="{{ asset('image/icon/home.svg') }}" alt="home" width="15"/>
                         </div>
@@ -23,7 +22,7 @@
                 <x-nav-link class="flex items-center" @click="activeTab = 'projects'">
                     <a href="{{ route('projects') }}"
                        class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
-                       :class="activeTab === 'projects' ||activeTab === 'projects.details'  ||activeTab === 'projects.tasks' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                       :class="activeTab === 'projects' ||activeTab === 'projects.details'  ||activeTab === 'projects.tasks' ? 'bg-tertiary text-white shadow-md' : 'text-text hover:bg-tertiary hover:text-white hover:shadow-lg'">
                         <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
                             <img src="{{ asset('image/icon/projects.svg') }}" alt="projects" width="15"/>
                         </div>
@@ -36,7 +35,7 @@
             @can('manage tasks')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
                     <div class="flex items-center cursor-pointer w-full" @click="open = !open"
-                         :class="activeTab === 'tasks' || activeTab === 'categories' || activeTab === 'status'||activeTab === 'tasks.details'  ? 'bg-tertiary text-white w-full rounded-md shadow-md' : 'text-gray-800 hover:w-full hover:rounded-md hover:bg-tertiary hover:text-white hover:shadow-md'">
+                         :class="activeTab === 'tasks' || activeTab === 'categories' || activeTab === 'status'||activeTab === 'tasks.details'  ? 'bg-tertiary text-white w-full rounded-md shadow-md' : 'text-text hover:w-full hover:rounded-md hover:bg-tertiary hover:text-white hover:shadow-md'">
                         <a href="{{ route('tasks') }}" class="flex items-center gap-3 py-3 px-5">
                             <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
                                 <img src="{{ asset('image/icon/tasks.svg') }}" alt="tasks" width="15"/>
@@ -50,15 +49,15 @@
                         </svg>
                     </div>
                     <div class="px-8 mx-2" x-show="open" x-transition>
-                        <div class="text-sm text-gray-600 my-3">
+                        <div class="text-sm text-text my-3">
                             @can('manage categories')
                                 <a href="{{ route('categories') }}"
-                                   class="hover:text-tertiary font-medium">Categories</a>
+                                   class="hover:text-hover font-medium">Categories</a>
                             @endcan
                         </div>
-                        <div class="text-sm text-gray-600 my-3">
+                        <div class="text-sm text-text my-3">
                             @can('manage statuses')
-                                <a href="{{ route('status') }}" class="hover:text-tertiary font-medium">Status</a>
+                                <a href="{{ route('status') }}" class="hover:text-hover font-medium">Status</a>
                             @endcan
                         </div>
                     </div>
@@ -69,7 +68,7 @@
             @can('view reports')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
                     <div class="flex items-center cursor-pointer w-full" @click="open = !open"
-                         :class="activeTab === 'Reports' || activeTab === 'project.report' || activeTab === 'task.report' ? 'bg-tertiary text-white w-full rounded-md shadow-md' : 'text-gray-800 hover:w-full hover:rounded-md hover:bg-tertiary hover:text-white hover:shadow-md'">
+                         :class="activeTab === 'Reports' || activeTab === 'project.report' || activeTab === 'task.report' ? 'bg-tertiary text-white w-full rounded-md shadow-md' : 'text-text hover:w-full hover:rounded-md hover:bg-tertiary hover:text-white hover:shadow-md'">
                         <a href="#" class="flex items-center gap-3 py-3 px-5">
                             <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
                                 <img src="{{ asset('image/icon/reports.svg') }}" alt="reports" width="15"/>
@@ -83,15 +82,15 @@
                         </svg>
                     </div>
                     <div class="px-8 mx-2" x-show="open" x-transition>
-                        <div class="text-sm text-gray-600 my-3">
+                        <div class="text-sm text-text my-3">
                             @can('view project report')
-                                <a href="{{ route('project.report') }}" class="hover:text-tertiary font-medium">Project
+                                <a href="{{ route('project.report') }}" class="hover:text-hover font-medium">Project
                                     Report</a>
                             @endcan
                         </div>
-                        <div class="text-sm text-gray-600 my-3">
+                        <div class="text-sm text-text my-3">
                             @can('view task report')
-                                <a href="{{ route('task.report') }}" class="hover:text-tertiary font-medium">Task
+                                <a href="{{ route('task.report') }}" class="hover:text-hover font-medium">Task
                                     Report</a>
                             @endcan
                         </div>
@@ -104,7 +103,7 @@
                 <x-nav-link class="flex items-center" @click="activeTab = 'users'">
                     <a href="{{ route('users') }}"
                        class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
-                       :class="activeTab === 'users' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                       :class="activeTab === 'users' ? 'bg-tertiary text-white shadow-md' : 'text-text hover:bg-tertiary hover:text-white hover:shadow-lg'">
                         <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
                             <img src="{{ asset('image/icon/users.svg') }}" alt="users" width="15"/>
                         </div>
@@ -117,7 +116,7 @@
                 <x-nav-link class="flex items-center" @click="activeTab = 'profile.edit'">
                     <a href="{{ route('profile.edit') }}"
                        class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
-                       :class="activeTab === 'profile.edit' ? 'bg-tertiary text-white shadow-md' : 'text-gray-800 hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                       :class="activeTab === 'profile.edit' ? 'bg-tertiary text-white shadow-md' : 'text-text hover:bg-tertiary hover:text-white hover:shadow-lg'">
                         <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
                             <img src="{{ asset('image/icon/settings.svg') }}" alt="settings" width="15"/>
                         </div>

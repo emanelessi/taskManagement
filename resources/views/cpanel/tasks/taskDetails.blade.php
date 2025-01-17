@@ -4,13 +4,13 @@
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
 
-        <div class="bg-sky-light/10 shadow-lg rounded-lg p-8">
+        <div class="bg-component shadow-lg rounded-lg p-8">
             <div class="grid mb-5 gap-6">
                 <!-- Task Name -->
                 <div class="flex justify-between my-3">
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Task Name:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->title }}</div>
+                        <p class="text-text font-bold text-lg">Task Name:</p>
+                        <div class="text-hover  font-medium">{{ $task->title }}</div>
                     </div>
                     <div class="flex space-x-2 px-2 ">
                         @can('delete tasks')
@@ -30,50 +30,50 @@
                 </div>
             </div>
             <!-- Section with Background -->
-            <div class="bg-gradient-to-r from-sky-light/10 to-sky-light/60  p-6 rounded-lg mb-6 shadow-inner">
+            <div class="bg-gradient-to-r from-bg-component to-bg-secondary  p-6 rounded-lg mb-6 shadow-inner">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <!-- Project -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Project:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->project->name ?? 'غير متوفر' }}</div>
+                        <p class="text-text font-bold text-lg">Project:</p>
+                        <div class="text-hover  font-medium">{{ $task->project->name ?? 'غير متوفر' }}</div>
                     </div>
                     <!-- Status -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Status:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->status->name ?? 'غير متوفر' }}</div>
+                        <p class="text-text font-bold text-lg">Status:</p>
+                        <div class="text-hover  font-medium">{{ $task->status->name ?? 'غير متوفر' }}</div>
                     </div>
                     <!-- Priority -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Priority:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->priority }}</div>
+                        <p class="text-text font-bold text-lg">Priority:</p>
+                        <div class="text-hover  font-medium">{{ $task->priority }}</div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
                     <!-- Completed Date -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Completed Date:</p>
+                        <p class="text-text font-bold text-lg">Completed Date:</p>
                         <div
-                            class="text-gray-800 font-medium">{{ \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') }}</div>
+                            class="text-hover  font-medium">{{ \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') }}</div>
                     </div>
                     <!-- Deadline -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Deadline:</p>
+                        <p class="text-text font-bold text-lg">Deadline:</p>
                         <div
-                            class="text-gray-800 font-medium">{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}</div>
+                            class="text-hover  font-medium">{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}</div>
                     </div>
                     <!-- Assigned To -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Assigned To:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->user->name ?? 'غير متوفر' }}</div>
+                        <p class="text-text font-bold text-lg">Assigned To:</p>
+                        <div class="text-hover  font-medium">{{ $task->user->name ?? 'غير متوفر' }}</div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
                     <!-- Category -->
                     <div class="flex items-center gap-2">
-                        <p class="text-tertiary font-bold text-lg">Category:</p>
-                        <div class="text-gray-800 font-medium">{{ $task->category->name ?? 'غير متوفر' }}</div>
+                        <p class="text-text font-bold text-lg">Category:</p>
+                        <div class="text-hover  font-medium">{{ $task->category->name ?? 'غير متوفر' }}</div>
                     </div>
 
 
@@ -82,16 +82,16 @@
 
             <!-- Description -->
             <div class="mb-6">
-                <p class="text-tertiary font-bold text-lg">Description:</p>
-                <div class="text-gray-800 leading-relaxed break-words">{{ $task->description }}</div>
+                <p class="text-text font-bold text-lg">Description:</p>
+                <div class="text-hover  leading-relaxed break-words">{{ $task->description }}</div>
             </div>
 
             <div class="mb-6">
-                <h3 class="text-tertiary font-bold text-lg mb-4">Attachments:</h3>
+                <h3 class="text-text font-bold text-lg mb-4">Attachments:</h3>
                 <div class="overflow-x-auto">
                     <div class="flex gap-4 min-w-max">
                         @if ($attachment->isEmpty())
-                            <div class="text-gray-500">No Attachments available.</div>
+                            <div class="text-hover ">No Attachments available.</div>
                         @else                        @foreach($task->attachments as $attachment)
                             <div class="relative group">
                                 <div class="cursor-pointer">
@@ -151,12 +151,12 @@
 
             <!-- Comments Section -->
             <div class="mb-6">
-                <h3 class="text-tertiary font-bold text-lg mb-2">Comments:</h3>
+                <h3 class="text-text font-bold text-lg mb-2">Comments:</h3>
                 @foreach ($comments as $comment)
                     <div
                         class="grid grid-cols-2 lg:grid-cols-2 gap-6  p-4 mb-4 border leading-relaxed break-words border-gray-300 rounded-lg bg-gray-50 shadow">
                         <div>
-                            <div class="text-gray-800 font-medium">{{ $comment->comment }}</div>
+                            <div class="text-hover  font-medium">{{ $comment->comment }}</div>
                             <div class="text-gray-500 text-sm mt-1">Posted
                                 by: {{ $comment->user->name ?? 'Unknown User' }}
                                 on {{ $comment->created_at->format('Y-m-d H:i') }}</div>
@@ -170,7 +170,7 @@
                             <!-- Edit Button SVG -->
                             @can('edit comments')
                                 <button onclick="openEditModal({{ $comment->id }}, '{{ $comment->comment }}')"
-                                        class="text-blue-600 hover:text-blue-800">
+                                        class="text-hover hover:text-blue-800">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                          stroke-width="2"
                                          stroke="currentColor" class="w-5 h-5">
@@ -205,7 +205,7 @@
                         @csrf
                         <input type="hidden" name="task_id" value="{{ $task->id }}">
                         <div class="mb-4">
-                            <x-input-label for="comment" class="block text-tertiary font-bold mb-2">Add a Comment:
+                            <x-input-label for="comment" class="block text-text font-bold mb-2">Add a Comment:
                             </x-input-label>
                             <textarea name="comment" id="comment" rows="4"
                                       class="w-full px-3 py-2 text-black border border-gray-300 rounded-lg"

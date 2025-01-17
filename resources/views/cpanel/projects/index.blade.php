@@ -18,10 +18,10 @@
                     <div class="relative w-full">
                         <input type="text" name="search" id="searchInput" placeholder="Search"
                                value="{{ request('search') }}"
-                               class="text-sm border border-secondary w-full bg-primary rounded-md"
+                               class="text-sm border border-black w-full bg-background rounded-md"
                                oninput="handleSearchInput()">
                         <button type="submit"
-                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg">
+                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-text bg-button rounded-e-lg">
                             <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4">
                         </button>
                     </div>
@@ -37,8 +37,8 @@
                 foreach ($projects as $project) {
                     $rows[] = [
                         auth()->user()->can('view project details', $project)
-                            ? '<a href="' . route('projects.details', $project->id) . '" class="text-blue-600 hover:underline">' . $project->name . '</a>'
-                            : '<span class="text-gray-500">' . $project->name . '</span>',
+                            ? '<a href="' . route('projects.details', $project->id) . '" class="text-hover hover:underline">' . $project->name . '</a>'
+                            : '<span class="text-text">' . $project->name . '</span>',
                          optional($project->status)->name ?? "-",
                         $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('Y-m-d') :  "-",
                         $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('Y-m-d') :  "-",
@@ -46,7 +46,7 @@
                         implode(', ', $project->managers->pluck('name')->toArray())?? "-",
 
                         (auth()->user()->can('edit projects', $project)
-                            ? '<a href="#" class="text-tertiary hover:text-tertiary edit-project" data-id="' . $project->id . '"
+                            ? '<a href="#" class="text-hover edit-project" data-id="' . $project->id . '"
                                 data-name="' . $project->name . '"
                                 data-status="' . optional($project->status)->id  . '"
                                 data-deadline="' . $project->deadline . '"
@@ -77,7 +77,7 @@
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit Project</h2>
                     <div class="mb-4">
                         <x-input-label  required >Project Name:</x-input-label>
@@ -147,7 +147,7 @@
             <form id="deleteProjectModal" method="POST" action="#" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('DELETE')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
                     <x-input-label class="text-xl">Are you sure you want to delete <span id="deleteProjectName" class="font-bold"></span>?</x-input-label>
                     <input type="hidden" name="project_id" id="project_id">
@@ -162,7 +162,7 @@
             <!-- Add Project Modal -->
             <form id="addProjectModal" method="POST" action="{{ route('projects.store') }}" class="hidden fixed inset-0 flex  items-center justify-center bg-black bg-opacity-50">
                 @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New Project</h2>
                     <div class="mb-4">
                         <x-input-label required>Project Name:</x-input-label>

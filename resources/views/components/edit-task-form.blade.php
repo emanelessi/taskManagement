@@ -6,7 +6,7 @@
     @csrf
     @method('PATCH')
 
-    <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+    <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
         <h2 class="text-lg font-semibold my-4">Edit Task</h2>
         <div class="mb-4">
             <x-input-label>Task Name:</x-input-label>
@@ -55,7 +55,7 @@
         <div class="mb-4">
             <x-input-label required>priority:</x-input-label>
             <select name="priority" required
-                    class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                    class="w-full border-black/30  focus:border-indigo-500   focus:ring-indigo-500   rounded-md shadow-sm"
                     >
                 <option value="Low" {{ isset($task) && $task->priority == 'Low' ? 'selected' : '' }}>Low
                 </option>
@@ -70,7 +70,7 @@
         <div class="mb-4">
             <x-input-label required>Due Date:</x-input-label>
             <x-text-input class="w-full" type="date" name="due_date" value=" {{ isset($task->due_date) ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '' }}"
-                          required></x-text-inputrequired>
+                          required></x-text-input>
         </div>
         <div class="mb-4">
             <x-input-label>completed Date:</x-input-label>

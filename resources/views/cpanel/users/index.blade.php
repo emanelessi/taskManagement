@@ -16,9 +16,9 @@
                         <input type="text" name="search" id="searchInput" placeholder="Search"
                                value="{{ request('search') }}"
                                oninput="handleSearchInput()"
-                               class="text-sm border border-secondary w-full bg-primary rounded-md">
+                               class="text-sm border border-black w-full bg-background rounded-md">
                         <button type="submit" id="searchButton"
-                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg">
+                                class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-text bg-tertiary rounded-e-lg">
                             <img src="{{ asset('image/icon/search.svg') }}" alt="search" class="w-4 h-4">
                         </button>
                     </div>
@@ -38,7 +38,7 @@
                        $user->roles->isNotEmpty() ? $user->roles->first()->name : '-',
                         \Carbon\Carbon::parse($user->created_at)->format('Y-m-d'),
                         (auth()->user()->can('edit users', $user)
-                            ? '<a href="#" class="text-tertiary hover:text-tertiary edit-user" data-id="' . $user->id . '" data-name="' . $user->name . '" data-email="' . $user->email . '" data-role-id="' . ($user->roles->isNotEmpty() ? $user->roles->first()->id : '')  . '">Edit</a>'
+                            ? '<a href="#" class="text-hover edit-user" data-id="' . $user->id . '" data-name="' . $user->name . '" data-email="' . $user->email . '" data-role-id="' . ($user->roles->isNotEmpty() ? $user->roles->first()->id : '')  . '">Edit</a>'
                             : '') .
                         (auth()->user()->can('delete users', $user)
                             ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-user" data-id="' . $user->id . '">Delete</a>'
@@ -58,7 +58,7 @@
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12   z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12   z-30">
                     <h2 class="text-lg font-semibold mb-4">Edit User</h2>
                     <div class="mb-4">
                         <x-input-label required>User Name:</x-input-label>
@@ -80,7 +80,7 @@
                     <div class="mb-4">
                         <x-input-label required>Role:</x-input-label>
                         <select name="roles[]" id="editRole" id="editRole" required
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="w-full border-black   focus:border-indigo-500   focus:ring-indigo-500  rounded-md shadow-sm"
                         >
                             <option value="">Select Role</option>
                             @foreach ($roles as $role)
@@ -104,7 +104,7 @@
                   class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('DELETE')
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
                     <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"></span>?
                     </x-input-label>
@@ -120,7 +120,7 @@
             <form id="addUserModal" method="POST" action="{{ route('users.store') }}"
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
-                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  z-30">
+                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  z-30">
                     <h2 class="text-lg font-semibold mb-4">Add New User</h2>
                     <div class="mb-4">
                         <x-input-label required>User Name:</x-input-label>
@@ -137,7 +137,7 @@
                     <div class="mb-4">
                         <x-input-label required>Role:</x-input-label>
                         <select name="roles[]" id="addUserRoles" required
-                                class="w-full border-black/30 dark:border-black/70 dark:bg-black/90 dark:text-black/30 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm"
+                                class="w-full border-black  focus:border-indigo-500   focus:ring-indigo-500   rounded-md shadow-sm"
                         >
                             @foreach ($roles as $role)
                                 <option value="{{ $role->id }}">{{ $role->name }}</option>

@@ -1,3 +1,105 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* تعريف الأنماط للسمات */
+:root, .theme-light {
+    --color-primary: #F3F4F8;
+    --color-secondary: #8C97A8;
+    --color-tertiary: #40407b;
+    --color-quaternary: #94A2BC;
+    --color-black: #23235F;
+    --color-white: #FFFFFF;
+    --color-sky-light: #E0E7FF;
+    --color-blue-pale: #F0F4FF;
+}
+
+.theme-dark {
+    --color-primary: #1A202C;
+    --color-secondary: #2D3748;
+    --color-tertiary: #4A5568;
+    --color-quaternary: #718096;
+    --color-black: #FFFFFF;
+    --color-white: #1A202C;
+    --color-sky-light: #2D3748;
+    --color-blue-pale: #4A5568;
+}
+
+.theme-blue {
+    --color-primary: #E0F2FF;
+    --color-secondary: #93C5FD;
+    --color-tertiary: #3B82F6;
+    --color-quaternary: #1D4ED8;
+    --color-black: #1E3A8A;
+    --color-white: #FFFFFF;
+    --color-sky-light: #BFDBFE;
+    --color-blue-pale: #DBEAFE;
+}
+
+.theme-green {
+    --color-primary: #D1FAE5;
+    --color-secondary: #6EE7B7;
+    --color-tertiary: #10B981;
+    --color-quaternary: #059669;
+    --color-black: #065F46;
+    --color-white: #FFFFFF;
+    --color-sky-light: #A7F3D0;
+    --color-blue-pale: #D1FAE5;
+}
+
+.theme-purple {
+    --color-primary: #EDE9FE;
+    --color-secondary: #C4B5FD;
+    --color-tertiary: #8B5CF6;
+    --color-quaternary: #6D28D9;
+    --color-black: #4C1D95;
+    --color-white: #FFFFFF;
+    --color-sky-light: #DDD6FE;
+    --color-blue-pale: #EDE9FE;
+}
+
+/* تطبيق المتغيرات على Tailwind */
+@layer utilities {
+    .bg-background {
+        background-color: var(--color-primary);
+    }
+    .bg-button {
+        background-color: var(--color-black);
+    }
+    .bg-component {
+        background-color: var(--color-sky-light);
+    }
+    .bg-secondary {
+        background-color: var(--color-secondary);
+    }
+    .bg-tertiary {
+        background-color: var(--color-tertiary);
+    }
+    .text-text {
+        color: var(--color-black);
+    }
+    .text-hover {
+        color: var(--color-tertiary);
+    }
+    .text-white {
+        color: var(--color-white);
+    }
+    .text-secondary {
+        color: var(--color-secondary);
+    }
+    .border-black {
+        border-color: #8080805e;
+    }
+    .border-quaternary {
+        color: var(--color-quaternary);
+    }
+    .bg-gradient-to-r {
+        background-image: linear-gradient(to right, var(--gradient-from), var(--gradient-to));
+    }
+    .from-bg-component {
+        --gradient-from: var(--color-sky-light);
+    }
+    .to-bg-secondary {
+        --gradient-to: var(--color-secondary);
+    }
+}

@@ -3,7 +3,7 @@
 <form id="addTaskModal" enctype="multipart/form-data" style="display: none;" method="POST" action="{{ route('tasks.store') }}"
       class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
     @csrf
-    <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+    <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
         <h2 class="text-lg font-semibold mb-4">Add New Task</h2>
 
         <div class="mb-4">

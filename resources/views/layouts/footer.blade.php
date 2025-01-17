@@ -1,13 +1,13 @@
-<footer class="bg-white dark:bg-gray-900">
+<footer class="bg-background  ">
     <div class="container px-6 pb-8 mx-auto">
 
-        <hr class="mb-10 border-gray-200 dark:border-gray-700">
+        <hr class="mb-10 border-black  ">
 
         <div class="sm:flex sm:items-center sm:justify-between">
-            <p class="text-sm text-gray-400">© Copyright 2025. All Rights Reserved to emanelessi.</p>
+            <p class="text-sm text-text">© Copyright 2025. All Rights Reserved to emanelessi.</p>
 
             <div class="flex mt-3 -mx-2 sm:mt-0">
-                <a href="#" class="mx-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Reddit">
+                <a href="#" class="mx-2 text-text hover:text-hover  " aria-label="Reddit">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -16,7 +16,7 @@
                     </svg>
                 </a>
 
-                <a href="#" class="mx-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Facebook">
+                <a href="#" class="mx-2 text-text hover:text-hover  " aria-label="Facebook">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -25,7 +25,7 @@
                     </svg>
                 </a>
 
-                <a href="#" class="mx-2 text-gray-400 hover:text-gray-500 dark:hover:text-gray-300" aria-label="Github">
+                <a href="#" class="mx-2 text-text hover:text-hover " aria-label="Github">
                     <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" fill="none"
                          xmlns="http://www.w3.org/2000/svg">
                         <path

@@ -5,10 +5,10 @@
         $categoryName = $taskGroup->first()->category->name ?? 'Category';
     @endphp
     <div class="lg:w-2/4 w-full task-group" data-category-id="{{ $categoryId }}">
-        <div class="flex justify-between bg-secondary/10  p-4 rounded-lg">
+        <div class="flex justify-between bg-secondary  p-4 rounded-lg">
             <div class="flex space-x-2 px-2">
-                <h2 class="text-md font-bold">{{ $categoryName }}</h2>
-                <h2 class="text-md font-bold text-tertiary">{{ $taskGroup->count() }}</h2>
+                <h2 class="text-md font-bold text-text">{{ $categoryName }}</h2>
+                <h2 class="text-md font-bold text-hover">{{ $taskGroup->count() }}</h2>
             </div>
             <div class="flex space-x-2 px-2">
                 <img src="{{ asset('image/icon/dots.svg') }}" alt="dots" width="20"/>
@@ -16,7 +16,7 @@
         </div>
         <div class="mt-2 tasks-list">
             @foreach($taskGroup as $task)
-                <div class="bg-sky-light/10  p-3 rounded-lg shadow mb-2 task" data-task-id="{{ $task->id }}">
+                <div class="text-black p-3 rounded-lg shadow mb-2 task bg-component" data-task-id="{{ $task->id }}">
                     @if($task->attachments->isNotEmpty())
                         @php
                             $latestAttachment = $task->attachments->sortByDesc('created_at')->first();
@@ -30,7 +30,7 @@
                             @if($task->priority == 'High')
                                 <p class="bg-red-300 text-sm flex   items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</p>
                             @elseif($task->priority == 'Medium')
-                                    <p class="bg-tertiary/30 text-sm flex items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</p>
+                                    <p class="bg-tertiary  text-sm flex items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</p>
                             @else
                                 <p class="bg-amber-200 text-sm flex  items-center justify-center rounded-md w-1/2"> {{ $task->priority ?? 'NON' }}</p>
                             @endif
@@ -41,10 +41,10 @@
                     </div>
                     @if(auth()->user()->can('view task details', $task))
                         <a href="{{ route('tasks.details', $task->id) }}">
-                            <p class="font-bold m-4 text-tertiary hover:underline">{{ $task->title ?? 'Task Title' }}</p>
+                            <p class="font-bold m-4 text-text hover:underline">{{ $task->title ?? 'Task Title' }}</p>
                         </a>
                     @else
-                        <p class="font-bold m-4 text-tertiary">{{$task->title ?? 'Task Title' }}</p>
+                        <p class="font-bold m-4 text-text">{{$task->title ?? 'Task Title' }}</p>
                     @endif
 
                     <p class="m-4 break-words">{{ Str::limit($task->description, 50) ?? 'Task Description' }}</p>
@@ -52,7 +52,7 @@
             @endforeach
         </div>
         <div class="mt-2 ">
-            <div class="p-3 bg-secondary/5  rounded-lg shadow mb-2 addTaskBtn" data-category-id="{{ $categoryId }}"
+            <div class="p-3 bg-secondary  rounded-lg shadow mb-2 addTaskBtn" data-category-id="{{ $categoryId }}"
                  data-project-id="{{ $project->id ?? '' }}">
                 <svg width="250" height="15" class="flex justify-center items-center mx-auto" viewBox="0 0 9 8"
                      fill="none" xmlns="http://www.w3.org/2000/svg">

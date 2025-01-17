@@ -17,7 +17,7 @@
                 <form id="searchForm" method="GET" action="{{ route('tasks') }}">
                     <div class="relative w-full">
                         <input type="text" name="search" id="searchInput" placeholder="Search" value="{{ request('search') }}"
-                               class="text-sm border border-secondary w-full bg-primary rounded-md"
+                               class="text-sm border border-secondary w-full bg-background rounded-md"
                                oninput="handleSearchInput()">
                         <button type="submit"
                                 class="absolute top-0 end-0 p-2.5 text-sm font-medium h-full text-white bg-tertiary rounded-e-lg">
@@ -37,8 +37,8 @@
                 foreach ($tasks as $task) {
                     $rows[] = [
                        auth()->user()->can('view task details', $task)
-                            ? '<a href="' . route('tasks.details', $task->id) . '" class="text-blue-600 hover:underline">' . $task->title . '</a>'
-                            : '<span class="text-gray-500">' . $task->title . '</span>',
+                            ? '<a href="' . route('tasks.details', $task->id) . '" class="text-hover hover:underline">' . $task->title . '</a>'
+                            : '<span class="text-secondary">' . $task->title . '</span>',
                          $task->priority,
                         $task->due_date ? \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') : '-',
                         $task->completed_at ? \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') : '-',
@@ -47,7 +47,7 @@
                         $task->project->name ?? '-',
                         $task->user->name ?? '-',
                         (auth()->user()->can('edit tasks', $task)
-                            ? '<a href="#" class="text-tertiary hover:text-tertiary editTask"
+                            ? '<a href="#" class="text-hover editTask"
                             data-id="' . $task->id . '"
                           data-title="' . $task->title . '"
                             data-description="' . $task->description . '"

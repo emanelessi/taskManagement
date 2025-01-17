@@ -1,9 +1,9 @@
 <x-guest-layout>
-        <h6 class="text-2xl font-bold text-center mb-6 text-gray-700 dark:text-gray-300">
+        <h6 class="text-2xl font-bold text-center mb-6 text-text  ">
             {{ __('Login to Your Account')}}</h6>
        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-       <form class="space-y-4" method="POST" action="{{ route('login') }}">
+       <form class="space-y-4" method="POST" action="{{ route('login') }}" >
             @csrf
 
             <div>
@@ -23,11 +23,11 @@
             </div>
             <div class="flex justify-between items-center">
                 <label for="remember_me" class="inline-flex items-center">
-                    <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                    <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                    <input id="remember_me" type="checkbox" class="rounded  border-gray-300  text-text shadow-sm focus:ring-indigo-500  " name="remember">
+                    <span class="ms-2 text-sm text-text">{{ __('Remember me') }}</span>
                 </label>
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}">
+                    <a class="underline text-sm text-text hover:text-hover   rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500  " href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
@@ -40,8 +40,8 @@
         </form>
 
         <div class="mt-6 text-center">
-            <p class="border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 focus:border-indigo-500 dark:focus:border-indigo-600 focus:ring-indigo-500 dark:focus:ring-indigo-600 rounded-md shadow-sm">Don't have an account?
-                    <a href="{{ route('register') }}"  class="text-tertiary hover:underline">Sign up</a>
+            <p class="border-gray-300  text-hover  focus:border-indigo-500   focus:ring-indigo-500  rounded-md shadow-sm">Don't have an account?
+                    <a href="{{ route('register') }}"  class="text-text hover:underline">Sign up</a>
             </p>
         </div>
 

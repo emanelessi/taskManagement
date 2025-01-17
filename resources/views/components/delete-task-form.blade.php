@@ -6,7 +6,7 @@
       class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
     @csrf
     @method('DELETE')
-    <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+    <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
         <h2 class="text-lg font-semibold mb-4">Confirm Deletion</h2>
         <x-input-label class="text-xl">Are you sure you want to delete <span class="font-bold"></span>?
         </x-input-label>
