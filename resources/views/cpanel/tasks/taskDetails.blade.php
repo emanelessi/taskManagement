@@ -1,15 +1,13 @@
 <x-app-layout>
     <div class="flex-1 overflow-auto p-6">
-        <!-- Alerts -->
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
 
         <div class="bg-component shadow-lg rounded-lg p-8">
             <div class="grid mb-5 gap-6">
-                <!-- Task Name -->
                 <div class="flex justify-between my-3">
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Task Name:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Task Name:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->title }}</div>
                     </div>
                     <div class="flex space-x-2 px-2 ">
@@ -29,50 +27,42 @@
                     </div>
                 </div>
             </div>
-            <!-- Section with Background -->
             <div class="bg-gradient-to-r from-bg-component to-bg-secondary  p-6 rounded-lg mb-6 shadow-inner">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                    <!-- Project -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Project:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Project:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->project->name ?? 'غير متوفر' }}</div>
                     </div>
-                    <!-- Status -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Status:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Status:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->status->name ?? 'غير متوفر' }}</div>
                     </div>
-                    <!-- Priority -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Priority:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Priority:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->priority }}</div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
-                    <!-- Completed Date -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Completed Date:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Completed Date:') }}</p>
                         <div
                             class="text-hover  font-medium">{{ \Carbon\Carbon::parse($task->completed_at)->format('Y-m-d') }}</div>
                     </div>
-                    <!-- Deadline -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Deadline:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Deadline:') }}</p>
                         <div
                             class="text-hover  font-medium">{{ \Carbon\Carbon::parse($task->due_date)->format('Y-m-d') }}</div>
                     </div>
-                    <!-- Assigned To -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Assigned To:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Assigned To:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->user->name ?? 'غير متوفر' }}</div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
-                    <!-- Category -->
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">Category:</p>
+                        <p class="text-text font-bold text-lg">{{ __('Category:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->category->name ?? 'غير متوفر' }}</div>
                     </div>
 
@@ -80,28 +70,25 @@
                 </div>
             </div>
 
-            <!-- Description -->
             <div class="mb-6">
-                <p class="text-text font-bold text-lg">Description:</p>
+                <p class="text-text font-bold text-lg">{{ __('Description:') }}</p>
                 <div class="text-hover  leading-relaxed break-words">{{ $task->description }}</div>
             </div>
 
             <div class="mb-6">
-                <h3 class="text-text font-bold text-lg mb-4">Attachments:</h3>
+                <h3 class="text-text font-bold text-lg mb-4">{{ __('Attachments:') }}</h3>
                 <div class="overflow-x-auto">
                     <div class="flex gap-4 min-w-max">
                         @if ($attachment->isEmpty())
-                            <div class="text-hover ">No Attachments available.</div>
+                            <div class="text-hover ">{{ __('No Attachments available.') }}</div>
                         @else                        @foreach($task->attachments as $attachment)
                             <div class="relative group">
                                 <div class="cursor-pointer">
                                     @if(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['jpg', 'png', 'jpeg', 'gif']))
-                                        <!-- Image Preview -->
                                         <img src="{{ asset('storage/' . $attachment->file_path) }}" alt="Attachment"
                                              class="w-32 h-32   rounded-lg transform transition-all duration-300 group-hover:scale-110"
                                              onclick="openImageModal('{{ asset('storage/' . $attachment->file_path) }}')">
                                     @elseif(in_array(pathinfo($attachment->file_path, PATHINFO_EXTENSION), ['pdf']))
-                                        <!-- PDF Preview -->
                                         <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
                                            class="w-32 h-32 bg-gray-200 flex items-center justify-center text-center rounded-lg">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24"
@@ -113,10 +100,9 @@
                                             </svg>
                                         </a>
                                     @else
-                                        <!-- Other Files -->
                                         <a href="{{ asset('storage/' . $attachment->file_path) }}" target="_blank"
                                            class="w-32 h-32 bg-gray-200 flex items-center justify-center text-center rounded-lg">
-                                            <p class="text-sm text-gray-700">Download File</p>
+                                            <p class="text-sm text-gray-700">{{ __('Download File') }}</p>
                                         </a>
                                     @endif
                                 </div>
@@ -137,7 +123,6 @@
                     </div>
                 </div>
             </div>
-            <!-- Image Modal -->
             <div id="imageModal"
                  class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
                 <div class="bg-white p-6 rounded-lg shadow-lg max-w-xl w-full px-4">
@@ -149,25 +134,22 @@
                 </div>
             </div>
 
-            <!-- Comments Section -->
             <div class="mb-6">
-                <h3 class="text-text font-bold text-lg mb-2">Comments:</h3>
+                <h3 class="text-text font-bold text-lg mb-2">{{ __('Comments:') }}</h3>
                 @foreach ($comments as $comment)
                     <div
                         class="grid grid-cols-2 lg:grid-cols-2 gap-6  p-4 mb-4 border leading-relaxed break-words border-gray-300 rounded-lg bg-gray-50 shadow">
                         <div>
                             <div class="text-hover  font-medium">{{ $comment->comment }}</div>
-                            <div class="text-gray-500 text-sm mt-1">Posted
-                                by: {{ $comment->user->name ?? 'Unknown User' }}
-                                on {{ $comment->created_at->format('Y-m-d H:i') }}</div>
+                            <div class="text-gray-500 text-sm mt-1">{{ __('Posted') }}
+                                {{ __('by:') }}  {{ $comment->user->name ?? 'Unknown User' }}
+                                {{ __('on') }} {{ $comment->created_at->format('Y-m-d H:i') }}</div>
                             <div class="text-gray-500 text-sm mt-1">
-                                Updated At: {{ $comment->updated_at->format('Y-m-d H:i') }}
+                                {{ __('Updated At: ') }} {{ $comment->updated_at->format('Y-m-d H:i') }}
 
                             </div>
                         </div>
-                        <!-- Buttons for Edit and Delete -->
                         <div class="flex gap-4 mt-2 justify-end">
-                            <!-- Edit Button SVG -->
                             @can('edit comments')
                                 <button onclick="openEditModal({{ $comment->id }}, '{{ $comment->comment }}')"
                                         class="text-hover hover:text-blue-800">
@@ -180,7 +162,6 @@
                                 </button>
                             @endcan
 
-                            <!-- Delete Button SVG -->
                             @can('delete comments')
                                 <button onclick="openDeleteModal({{ $comment->id }})"
                                         class="text-red-600 hover:text-red-800">
@@ -196,7 +177,7 @@
                     </div>
                 @endforeach
                 @if ($comments->isEmpty())
-                    <div class="text-gray-500">No comments available.</div>
+                    <div class="text-gray-500">{{ __('No comments available.') }}</div>
                 @endif
             </div>
             @can('create comments')
@@ -205,57 +186,54 @@
                         @csrf
                         <input type="hidden" name="task_id" value="{{ $task->id }}">
                         <div class="mb-4">
-                            <x-input-label for="comment" class="block text-text font-bold mb-2">Add a Comment:
+                            <x-input-label for="comment" class="block text-text font-bold mb-2">{{ __('Add a Comment:') }}
                             </x-input-label>
                             <textarea name="comment" id="comment" rows="4"
                                       class="w-full px-3 py-2 text-black border border-gray-300 rounded-lg"
                                       required></textarea>
                         </div>
                         <div class="flex justify-end  gap-4">
-                            <x-primary-button type="submit">Submit Comment</x-primary-button>
+                            <x-primary-button type="submit">{{ __('Submit Comment') }}</x-primary-button>
                         </div>
                     </form>
                 </div>
             @endcan
 
-            <!-- Back Button -->
             <div class="flex justify-end mt-6 gap-4">
                 <a href="{{ url('/tasks') }}">
-                    <x-primary-button >Back</x-primary-button>
+                    <x-primary-button >{{ __('Back') }}</x-primary-button>
                 </a>
             </div>
 
             <x-edit-task-form :task="$task" :projects="$project" :categories="$category" :statuses="$status"/>
                 <x-delete-task-form :task="$task"/>
-                <!-- Edit Comment Modal -->
                 <div id="editCommentModal"
                      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                        <h2 class="text-xl font-semibold mb-4">Edit Comment</h2>
+                        <h2 class="text-xl font-semibold mb-4">{{ __('Edit Comment') }}</h2>
                         <form id="editCommentForm" method="POST">
                             @csrf
                             @method('PUT')
                             <textarea id="editCommentText" name="comment" rows="4"
                                       class="w-full p-2 border border-gray-300 rounded-lg"></textarea>
                             <div class="flex justify-end mt-4 gap-4">
-                                <x-danger-button type="button" onclick="closeEditModal()">Cancel</x-danger-button>
-                                <x-primary-button type="submit">Save Changes</x-primary-button>
+                                <x-danger-button type="button" onclick="closeEditModal()">{{ __('Cancel') }}</x-danger-button>
+                                <x-primary-button type="submit">{{ __('Save Changes') }}</x-primary-button>
                             </div>
                         </form>
                     </div>
                 </div>
-                <!-- Delete Comment Modal -->
                 <div id="deleteCommentModal"
                      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                        <h2 class="text-xl font-semibold mb-4">Delete Comment</h2>
-                        <p>Are you sure you want to delete this comment?</p>
+                        <h2 class="text-xl font-semibold mb-4">{{ __('Delete Comment') }}</h2>
+                        <p>{{ __('Are you sure you want to delete this comment?') }}</p>
                         <div class="flex justify-end mt-4 gap-4">
-                            <x-danger-button type="button" onclick="closeDeleteModal()">Cancel</x-danger-button>
+                            <x-danger-button type="button" onclick="closeDeleteModal()">{{ __('Cancel') }}</x-danger-button>
                             <form id="deleteCommentForm" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <x-primary-button type="submit">Delete</x-primary-button>
+                                <x-primary-button type="submit">{{ __('Delete') }}</x-primary-button>
                             </form>
                         </div>
                     </div>
@@ -263,15 +241,15 @@
                 <div id="deleteAttachmentModal"
                      class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
                     <div class="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-                        <h2 class="text-xl font-semibold mb-4">Delete Attachment </h2>
-                        <p>Are you sure you want to delete this attachment ?</p>
+                        <h2 class="text-xl font-semibold mb-4">{{ __('Delete Attachment') }} </h2>
+                        <p>{{ __('Are you sure you want to delete this attachment ?') }}</p>
                         <div class="flex justify-end mt-4 gap-4">
-                            <x-danger-button type="button" onclick="closeAttachmentDeleteModal()">Cancel
+                            <x-danger-button type="button" onclick="closeAttachmentDeleteModal()">{{ __('Cancel') }}
                             </x-danger-button>
                             <form id="deleteAttachmentForm" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <x-primary-button type="submit">Delete</x-primary-button>
+                                <x-primary-button type="submit">{{ __('Delete') }}</x-primary-button>
                             </form>
                         </div>
                     </div>
@@ -316,7 +294,6 @@
             modal.classList.remove('hidden');
         }
 
-        // Close image modal
         function closeImageModal() {
             document.getElementById('imageModal').classList.add('hidden');
         }

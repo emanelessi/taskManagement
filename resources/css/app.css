@@ -1,7 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
 /* تعريف الأنماط للسمات */
 :root, .theme-light {
     --color-primary: #F3F4F8;

@@ -2,7 +2,7 @@
     <div id="success-alert"
          class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4"
          role="alert">
-        <strong class="font-bold">Success!</strong>
+        <strong class="font-bold">{{__('Success!')}}</strong>
         <span class="block sm:inline">{{ $message }}</span>
         <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer"
               onclick="document.getElementById('success-alert').style.display='none'">
@@ -18,7 +18,7 @@
 @if ($type === 'error' && count($errors) > 0)
     <div id="error-alert" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
          role="alert">
-        <strong class="font-bold">Error!</strong>
+        <strong class="font-bold"> {{__('Error!')}}</strong>
         <ul>
             @foreach ($errors as $error)
                 <li>{{ $error }}</li>

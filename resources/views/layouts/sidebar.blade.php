@@ -3,7 +3,6 @@
     <div class="text-2xl font-semibold mb-8 block md:hidden text-center text-text">Task Management</div>
     <nav x-data="{ open: false, activeTab: '{{ Route::currentRouteName() }}' }" class="m-2">
         <ul>
-            <!-- Dashboard Link -->
             @can('view dashboard')
                 <x-nav-link class="flex items-center" @click="activeTab = 'dashboard'">
                     <a href="{{ route('dashboard') }}"
@@ -17,7 +16,6 @@
                 </x-nav-link>
             @endcan
 
-            <!-- Projects Link -->
             @can('manage projects')
                 <x-nav-link class="flex items-center" @click="activeTab = 'projects'">
                     <a href="{{ route('projects') }}"
@@ -31,7 +29,6 @@
                 </x-nav-link>
             @endcan
 
-            <!-- Tasks Dropdown -->
             @can('manage tasks')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
                     <div class="flex items-center cursor-pointer w-full" @click="open = !open"
@@ -64,7 +61,6 @@
                 </li>
             @endcan
 
-            <!-- Reports Dropdown -->
             @can('view reports')
                 <li class="flex flex-col items-start py-2 mt-4" x-data="{ open: false }">
                     <div class="flex items-center cursor-pointer w-full" @click="open = !open"
@@ -98,7 +94,6 @@
                 </li>
             @endcan
 
-            <!-- Settings Link -->
             @can('manage users')
                 <x-nav-link class="flex items-center" @click="activeTab = 'users'">
                     <a href="{{ route('users') }}"
@@ -111,7 +106,6 @@
                     </a>
                 </x-nav-link>
             @endcan
-            <!-- Settings Link -->
             @can('manage settings')
                 <x-nav-link class="flex items-center" @click="activeTab = 'profile.edit'">
                     <a href="{{ route('profile.edit') }}"

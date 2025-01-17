@@ -40,8 +40,8 @@
         </form>
 
         <div class="mt-6 text-center">
-            <p class="border-gray-300  text-hover  focus:border-indigo-500   focus:ring-indigo-500  rounded-md shadow-sm">Don't have an account?
-                    <a href="{{ route('register') }}"  class="text-text hover:underline">Sign up</a>
+            <p class="border-gray-300  text-hover  focus:border-indigo-500   focus:ring-indigo-500  rounded-md shadow-sm">{{__("Don't have an account?")}}
+                    <a href="{{ route('register') }}"  class="text-text hover:underline">{{__('Sign up')}}</a>
             </p>
         </div>
 
