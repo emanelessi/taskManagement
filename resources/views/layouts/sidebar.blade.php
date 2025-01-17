@@ -1,5 +1,5 @@
 <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
-       class="md:block hidden bg-secondary/5 text-text shadow-lg p-4 w-64 fixed h-full transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
+       class="md:block hidden   text-text shadow-lg p-4 w-64 fixed h-full transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0">
     <div class="text-2xl font-semibold mb-8 block md:hidden text-center text-text">Task Management</div>
     <nav x-data="{ open: false, activeTab: '{{ Route::currentRouteName() }}' }" class="m-2">
         <ul>
