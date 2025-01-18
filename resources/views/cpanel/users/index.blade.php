@@ -6,14 +6,14 @@
             <div class="mb-4">
                 @can('create users')
                     <x-primary-button id="addUserBtn">
-                        {{ __('add_new_user') }}
+                        {{ __('Add New User') }}
                     </x-primary-button>
                 @endcan
             </div>
             <div class="mb-4 md:w-4/12">
                 <form id="searchForm" method="GET" action="{{ route('users') }}">
                     <div class="relative w-full">
-                        <input type="text" name="search" id="searchInput" placeholder="{{ __('search_placeholder') }}"
+                        <input type="text" name="search" id="searchInput" placeholder="{{ __('Search Placeholder') }}"
                                value="{{ request('search') }}"
                                oninput="handleSearchInput()"
                                class="text-sm border border-black w-full bg-background rounded-md">
@@ -28,7 +28,7 @@
 
         <div class="overflow-x-auto shadow-md rounded-lg">
             @php
-                $headers = [__('user_name'), __('email'), __('role'), __('add_date'), __('actions')];
+                $headers = [__('user name'), __('email'), __('role'), __('ADD Date'), __('actions')];
                 $rows = [];
                 foreach ($users as $user) {
                     $rows[] = [
@@ -40,7 +40,7 @@
                             ? '<a href="#" class="text-hover edit-user" data-id="' . $user->id . '" data-name="' . $user->name . '" data-email="' . $user->email . '" data-role-id="' . ($user->roles->isNotEmpty() ? $user->roles->first()->id : '')  . '">' . __('edit') . '</a>'
                             : '') .
                         (auth()->user()->can('delete users', $user)
-                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-user" data-id="' . $user->id . '">' . __('delete') . '</a>'
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 mx-4 delete-user" data-id="' . $user->id . '">' . __('delete') . '</a>'
                             : ''),
                     ];
                 }
@@ -58,7 +58,7 @@
                 @csrf
                 @method('PATCH')
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12   z-30">
-                    <h2 class="text-lg font-semibold mb-4">{{ __('edit_user') }}</h2>
+                    <h2 class="text-lg font-semibold mb-4">{{ __('Edit User') }}</h2>
                     <div class="mb-4">
                         <x-input-label required>{{ __('user_name') }}:</x-input-label>
                         <x-text-input class="w-full" type="text" name="name"
@@ -79,7 +79,7 @@
                         <x-input-label required>{{ __('role') }}:</x-input-label>
                         <select name="roles[]" id="editRole" required
                                 class="w-full border-black focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                            <option value="">{{ __('select_role') }}</option>
+                            <option value="">{{ __('Select Role') }}</option>
                             @foreach ($roles as $role)
                                 <option
                                     value="{{ $role->id }}" {{ (isset($user) && $user->roles->contains($role->id)) ? 'selected' : '' }}>
@@ -90,7 +90,7 @@
                     </div>
                     <div class="flex justify-end gap-4">
                         <x-danger-button type="button" id="cancelEditUser">{{ __('cancel') }}</x-danger-button>
-                        <x-primary-button type="submit">{{ __('edit_user') }}</x-primary-button>
+                        <x-primary-button type="submit">{{ __('Edit User') }}</x-primary-button>
                     </div>
                 </div>
             </form>
@@ -102,8 +102,8 @@
                 @csrf
                 @method('DELETE')
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
-                    <h2 class="text-lg font-semibold mb-4">{{ __('confirm_deletion') }}</h2>
-                    <x-input-label class="text-xl">{{ __('confirm_deletion_message') }} <span class="font-bold"></span>?</x-input-label>
+                    <h2 class="text-lg font-semibold mb-4">{{ __('Confirm Deletion') }}</h2>
+                    <x-input-label class="text-xl">{{ __('Confirm Deletion Message') }} <span class="font-bold"></span>?</x-input-label>
                     <input type="hidden" name="user_id" id="user_id">
                     <div class="flex justify-end gap-2">
                         <x-primary-button type="button" id="cancelDeleteUser">{{ __('cancel') }}</x-primary-button>
@@ -116,9 +116,9 @@
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12  z-30">
-                    <h2 class="text-lg font-semibold mb-4">{{ __('add_new_user') }}</h2>
+                    <h2 class="text-lg font-semibold mb-4">{{ __('Add New User') }}</h2>
                     <div class="mb-4">
-                        <x-input-label required>{{ __('user_name') }}:</x-input-label>
+                        <x-input-label required>{{ __('User Name') }}:</x-input-label>
                         <x-text-input class="w-full" type="text" name="name" required/>
                     </div>
                     <div class="mb-4">
@@ -140,7 +140,7 @@
                     </div>
                     <div class="flex justify-end gap-4">
                         <x-danger-button type="button" id="cancelAddUser">{{ __('cancel') }}</x-danger-button>
-                        <x-primary-button type="submit">{{ __('add_user') }}</x-primary-button>
+                        <x-primary-button type="submit">{{ __('Add User') }}</x-primary-button>
                     </div>
                 </div>
             </form>

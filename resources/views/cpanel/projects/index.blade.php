@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="flex-1 overflow-auto ">
+    <div class="flex-1 overflow-auto">
         <x-alert type="success" :message="session('success')"/>
         <x-alert type="error" :errors="$errors->all()"/>
 
@@ -44,26 +44,26 @@
                         auth()->user()->can('view project details', $project)
                             ? '<a href="' . route('projects.details', $project->id) . '" class="text-hover hover:underline">' . $project->name . '</a>'
                             : '<span class="text-text">' . $project->name . '</span>',
-                         optional($project->status)->name ?? "-",
-                        $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('Y-m-d') :  "-",
-                        $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('Y-m-d') :  "-",
+                        optional($project->status)->name ?? "-",
+                        $project->start_date ? \Carbon\Carbon::parse($project->start_date)->format('Y-m-d') : "-",
+                        $project->deadline ? \Carbon\Carbon::parse($project->deadline)->format('Y-m-d') : "-",
                         $project->cost ?? "-",
-                        implode(', ', $project->managers->pluck('name')->toArray())?? "-",
-
+                        implode(', ', $project->managers->pluck('name')->toArray()) ?? "-",
                         (auth()->user()->can('edit projects', $project)
                             ? '<a href="#" class="text-hover edit-project" data-id="' . $project->id . '"
                                 data-name="' . $project->name . '"
-                                data-status="' . optional($project->status)->id  . '"
+                                data-status="' . optional($project->status)->id . '"
                                 data-deadline="' . $project->deadline . '"
                                 data-start-date="' . $project->start_date . '"
                                 data-description="' . $project->description . '"
                                 data-cost="' . $project->cost . '"
-                                data-project-manager="'.implode(',', $project->managers->pluck('id')->toArray()) .'"
-   data-project-members="'. implode(',', $project->teamMembers->pluck('id')->toArray()) .'"
-                                >{{ __("Edit") }}</a>'
-                            : '') .
+                                data-project-manager="' . implode(',', $project->managers->pluck('id')->toArray()) . '"
+                                data-project-members="'
+                                . implode(',', $project->teamMembers->pluck('id')->toArray()) . '"
+                              >' . __('edit') . '</a>'
+                            : ' ') .
                         (auth()->user()->can('delete projects', $project)
-                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-project" data-id="' . $project->id . '">{{ __("Delete") }}</a>'
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 mx-4 delete-project" data-id="' . $project->id . '">' . __('delete') . '</a>'
                             : ''),
                     ];
                 }
@@ -72,7 +72,7 @@
             <x-static-table :headers="$headers" :rows="$rows"/>
 
             <div class="mt-4">
-                {{  $projects->links() }}
+                {{ $projects->links() }}
             </div>
 
             <form id="editProjectModal" method="POST"
@@ -80,44 +80,53 @@
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('PATCH')
-                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+                <div
+                    class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">{{ __('Edit Project') }}</h2>
                     <div class="mb-4">
                         <x-input-label required>{{ __('Project Name:') }}</x-input-label>
-                        <x-text-input class="w-full" type="text" id="editProjectName" name="name" required></x-text-input>
+                        <x-text-input class="w-full" type="text" id="editProjectName" name="name"
+                                      required></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Status:') }}</x-input-label>
-                        <select name="status" id="editProjectStatus" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                        <select name="status" id="editProjectStatus"
+                                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                             <option value="">{{ __('Select status') }}</option>
                             @foreach($status as $statu)
-                                <option value="{{ $statu->id }}" {{ isset($project) && $project->status_id == $statu->id ? 'selected' : '' }}>{{ $statu->name }}</option>
+                                <option
+                                    value="{{ $statu->id }}" {{ isset($project) && $project->status_id == $statu->id ? 'selected' : '' }}>{{ $statu->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Due Date:') }}</x-input-label>
-                        <x-text-input class="w-full" type="date" name="deadline" id="editProjectDeadline" ></x-text-input>
+                        <x-text-input class="w-full" type="date" name="deadline"
+                                      id="editProjectDeadline"></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Start Date:') }}</x-input-label>
-                        <x-text-input class="w-full" type="date" name="start_date" id="editProjectStartDate" ></x-text-input>
+                        <x-text-input class="w-full" type="date" name="start_date"
+                                      id="editProjectStartDate"></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Cost:') }}</x-input-label>
-                        <x-text-input class="w-full" type="number" name="cost" id="editProjectCost" ></x-text-input>
+                        <x-text-input class="w-full" type="number" name="cost" id="editProjectCost"></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Description:') }}</x-input-label>
-                        <textarea name="description" id="editProjectDescription" class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" ></textarea>
+                        <textarea name="description" id="editProjectDescription"
+                                  class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
                     </div>
                     <div class="mb-4">
                         <x-input-label required>{{ __('Assign Project Manager:') }}</x-input-label>
-                        <select name="project_manager" id="editProjectManager" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
+                        <select name="project_manager" id="editProjectManager"
+                                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"
+                                required>
                             <option value="">{{ __('Select Project Manager') }}</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}"
-                                    {{ isset($project->managers) && $project->managers->contains('id', $user->id) ? 'selected' : '' }}>
+                                <option
+                                    value="{{ $user->id }}" {{ isset($project->managers) && $project->managers->contains('id', $user->id) ? 'selected' : '' }}>
                                     {{ $user->name }}
                                 </option>
                             @endforeach
@@ -126,11 +135,12 @@
 
                     <div class="mb-4">
                         <x-input-label>{{ __('Assign Team Members:') }}</x-input-label>
-                        <select name="team_members[]" id="editProjectMembers" multiple class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                        <select name="team_members[]" id="editProjectMembers" multiple
+                                class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
                             <option value="">{{ __('Select Team Members') }}</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}"
-                                    {{ isset($project->teamMembers) && $project->teamMembers->contains('id', $user->id) ? 'selected' : '' }}>
+                                <option
+                                    value="{{ $user->id }}" {{ isset($project->teamMembers) && $project->teamMembers->contains('id', $user->id) ? 'selected' : '' }}>
                                     {{ $user->name }}
                                 </option>
                             @endforeach
@@ -144,12 +154,15 @@
                 </div>
             </form>
 
-            <form id="deleteProjectModal" method="POST" action="#" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <form id="deleteProjectModal" method="POST" action="#"
+                  class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 @method('DELETE')
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12">
                     <h2 class="text-lg font-semibold mb-4">{{ __('Confirm Deletion') }}</h2>
-                    <x-input-label class="text-xl">{{ __('Are you sure you want to delete') }} <span id="deleteProjectName" class="font-bold"></span>?</x-input-label>
+                    <x-input-label class="text-xl">{{ __('Are you sure you want to delete') }} <span
+                            id="deleteProjectName" class="font-bold"></span>?
+                    </x-input-label>
                     <input type="hidden" name="project_id" id="project_id">
                     <div class="flex justify-end gap-2">
                         <x-primary-button type="button" id="cancelDeleteProject">{{ __('Cancel') }}</x-primary-button>
@@ -158,42 +171,42 @@
                 </div>
             </form>
 
-            <form id="addProjectModal" method="POST" action="{{ route('projects.store') }}" class="hidden fixed inset-0 flex  items-center justify-center bg-black bg-opacity-50">
+            <form id="addProjectModal" method="POST" action="{{ route('projects.store') }}" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
-                <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12">
-                    <h2 class="text-lg font-semibold mb-4">{{ __('Add Project') }}</h2>
+                <div class="bg-white p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
+                    <h2 class="text-lg font-semibold mb-4">{{ __('Add New Project') }}</h2>
                     <div class="mb-4">
                         <x-input-label required>{{ __('Project Name:') }}</x-input-label>
-                        <x-text-input class="w-full" type="text" name="name" id="addProjectName" required></x-text-input>
+                        <x-text-input class="w-full" type="text" name="name" required></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Status:') }}</x-input-label>
                         <select name="status" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
-                            <option value="">{{ __('Select Status') }}</option>
+                            <option value="">{{ __('Select status') }}</option>
                             @foreach($status as $statu)
                                 <option value="{{ $statu->id }}">{{ $statu->name }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-4">
-                        <x-input-label>{{ __('Start Date:') }}</x-input-label>
-                        <x-text-input class="w-full" type="date" name="start_date" id="addProjectStartDate"></x-text-input>
+                        <x-input-label>{{ __('Due Date:') }}</x-input-label>
+                        <x-text-input class="w-full" type="date" name="deadline"></x-text-input>
                     </div>
                     <div class="mb-4">
-                        <x-input-label>{{ __('Deadline:') }}</x-input-label>
-                        <x-text-input class="w-full" type="date" name="deadline" id="addProjectDeadline"></x-text-input>
+                        <x-input-label>{{ __('Start Date:') }}</x-input-label>
+                        <x-text-input class="w-full" type="date" name="start_date"></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Cost:') }}</x-input-label>
-                        <x-text-input class="w-full" type="number" name="cost" id="addProjectCost"></x-text-input>
+                        <x-text-input class="w-full" type="number" name="cost"></x-text-input>
                     </div>
                     <div class="mb-4">
                         <x-input-label>{{ __('Description:') }}</x-input-label>
-                        <textarea name="description" id="addProjectDescription" class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
+                        <textarea name="description" class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary"></textarea>
                     </div>
                     <div class="mb-4">
-                        <x-input-label>{{ __('Assign Project Manager:') }}</x-input-label>
-                        <select name="project_manager" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
+                        <x-input-label required>{{ __('Assign Project Manager:') }}</x-input-label>
+                        <select name="project_manager" class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
                             <option value="">{{ __('Select Project Manager') }}</option>
                             @foreach($users as $user)
                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -201,6 +214,7 @@
                         </select>
                     </div>
 
+                    <!-- اختيار أعضاء الفريق -->
                     <div class="mb-4">
                         <x-input-label>{{ __('Assign Team Members:') }}</x-input-label>
                         <select name="team_members[]" multiple class="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-tertiary">
@@ -210,17 +224,15 @@
                             @endforeach
                         </select>
                     </div>
-
                     <div class="flex justify-end gap-4">
                         <x-danger-button type="button" id="cancelAddProject">{{ __('Cancel') }}</x-danger-button>
                         <x-primary-button>{{ __('Add Project') }}</x-primary-button>
                     </div>
                 </div>
-            </form>
-        </div>
+            </form>            </div>
     </div>
 
-<script>
+    <script>
         document.addEventListener('DOMContentLoaded', () => {
             const addProjectModal = document.getElementById('addProjectModal');
             const editProjectModal = document.getElementById('editProjectModal');
@@ -264,7 +276,6 @@
                     });
                     document.querySelector('input[name="cost"]').value = projectCost;
 
-
                     editProjectModal.setAttribute('action', `{{ route('projects.update', '') }}/${projectId}`);
                     editProjectModal.style.display = 'flex';
                 });
@@ -282,7 +293,6 @@
                     deleteProjectModal.style.display = 'flex';
                 });
             });
-
         });
 
         function handleSearchInput() {
@@ -298,5 +308,4 @@
             }
         }
     </script>
-
 </x-app-layout>

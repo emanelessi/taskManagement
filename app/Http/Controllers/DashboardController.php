@@ -51,22 +51,21 @@ class DashboardController extends Controller
             ->whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])
             ->count();
         $taskDifferenceText = $completedTasksThisWeek - $completedTasksLastWeek > 0
-            ? "+".($completedTasksThisWeek - $completedTasksLastWeek)." more"
-            : ($completedTasksThisWeek - $completedTasksLastWeek)." less";
-
+            ? "+" . ($completedTasksThisWeek - $completedTasksLastWeek) . " " . __("more")
+            : ($completedTasksThisWeek - $completedTasksLastWeek) . " " . __("less");
         // حساب المهام الجديدة هذا الأسبوع والأسبوع الماضي
         $newTasksThisWeek = Task::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
         $newTasksLastWeek = Task::whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])->count();
         $newTaskDifferenceText = $newTasksThisWeek - $newTasksLastWeek > 0
-            ? "+".($newTasksThisWeek - $newTasksLastWeek)." more"
-            : ($newTasksThisWeek - $newTasksLastWeek)." less";
+            ? "+".($newTasksThisWeek - $newTasksLastWeek)." " . __("more")
+            : ($newTasksThisWeek - $newTasksLastWeek)." " . __("less");
 
         // حساب المشاريع الجديدة هذا الأسبوع والأسبوع الماضي
         $newProjectsThisWeek = Project::whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->count();
         $newProjectsLastWeek = Project::whereBetween('created_at', [now()->subWeek()->startOfWeek(), now()->subWeek()->endOfWeek()])->count();
         $newProjectDifferenceText = $newProjectsThisWeek - $newProjectsLastWeek > 0
-            ? "+".($newProjectsThisWeek - $newProjectsLastWeek)." more"
-            : ($newProjectsThisWeek - $newProjectsLastWeek)." less";
+            ? "+".($newProjectsThisWeek - $newProjectsLastWeek)." " . __("more")
+            : ($newProjectsThisWeek - $newProjectsLastWeek)." " . __("less");
 
         return view('cpanel.dashboard', compact(
             'chart', 'cost',

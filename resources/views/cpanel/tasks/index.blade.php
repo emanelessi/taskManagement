@@ -7,7 +7,7 @@
             <div class="mb-4">
                 @can('create tasks')
                     <x-primary-button class="addTaskBtn">
-                        {{ __('add_task') }}
+                        {{ __('Add Task') }}
                     </x-primary-button>
                 @endcan
             </div>
@@ -28,14 +28,14 @@
         <div class="overflow-x-auto shadow-md rounded-lg ">
             @php
                 $headers = [
-                    __('task_title'),
+                    __('Task Title'),
                     __('priority'),
-                    __('start_date'),
-                    __('completed_date'),
+                    __('Start Date'),
+                    __('Completed Date'),
                     __('category'),
                     __('status'),
                     __('project'),
-                    __('assigned_to'),
+                    __('Assigned To'),
                     __('actions')
                 ];
                 $rows = [];
@@ -66,7 +66,7 @@
                             : '') .
                             (auth()->user()->can('delete tasks', $task)
                             ? '
-                            <a href="#" class="text-red-600 hover:text-red-900 ml-4  deleteTask" data-id="' . $task->id . '">' . __('delete') . '</a>'
+                            <a href="#" class="text-red-600 hover:text-red-900 mx-4  deleteTask" data-id="' . $task->id . '">' . __('delete') . '</a>'
                             : ''),
                     ];
                 }

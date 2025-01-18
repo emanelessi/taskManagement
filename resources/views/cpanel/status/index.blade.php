@@ -6,7 +6,7 @@
             <div class="mb-4">
                 @can('create statuses')
                     <x-primary-button id="addStatusBtn">
-                        {{ __('add_new_status') }}
+                        {{ __('Add New Status') }}
                     </x-primary-button>
                 @endcan
             </div>
@@ -28,7 +28,7 @@
 
         <div class="overflow-x-auto  shadow-md rounded-lg">
             @php
-                $headers = [__('status_name'), __('status'), __('add_date'), __('actions')];
+                $headers = [__('Status Name'), __('status'), __('ADD Date'), __('actions')];
                 $rows = [];
                 foreach ($statuses as $status) {
                     $rows[] = [
@@ -37,10 +37,10 @@
                         \Carbon\Carbon::parse($status->created_at)->format('Y-m-d'),
                           (auth()->user()->can('edit statuses', $status)
                             ? '<a href="#" class="text-tertiary hover:text-tertiary edit-status" data-id="' . $status->id . '"   data-name="' . $status->name . '"
-                            data-status="' . $status->status . '">' . __('edit_status') . '</a>'
+                            data-status="' . $status->status . '">' . __('edit') . '</a>'
                             : '') .
                             (auth()->user()->can('delete statuses', $status)
-                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-status" data-id="' . $status->id . '">' . __('delete') . '</a>'
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 mx-4 delete-status" data-id="' . $status->id . '">' . __('delete') . '</a>'
                             : ''), ];
                 }
             @endphp
@@ -57,9 +57,9 @@
                 @csrf
                 @method('PATCH')
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
-                    <h2 class="text-lg font-semibold mb-4">{{ __('edit_status') }}</h2>
+                    <h2 class="text-lg font-semibold mb-4">{{ __('Edit Status') }}</h2>
                     <div class="mb-4">
-                        <x-input-label required>{{ __('status_name') }}:</x-input-label>
+                        <x-input-label required>{{ __('Status Name') }}:</x-input-label>
                         <x-text-input class="w-full " type="text" name="name"
                                       id="editStatusName" value="{{ $status->name ?? '' }}"
                                       required/>
@@ -68,7 +68,7 @@
                         <x-input-label required>{{ __('status') }}:</x-input-label>
                         <select name="status" id="editStatus"
                                 class="w-full border-black focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-                            <option value="">{{ __('select_status') }}</option>
+                            <option value="">{{ __('Select Status') }}</option>
                             <option value="enable" {{ isset($status->status) && $status->status == 'enable' ? 'selected' : '' }}>{{ __('enable') }}</option>
                             <option value="disable" {{ isset($status->status) && $status->status == 'disable' ? 'selected' : '' }}>{{ __('disable') }}</option>
                         </select>
@@ -76,7 +76,7 @@
 
                     <div class="flex justify-end gap-4">
                         <x-danger-button type="button" id="cancelEditStatus">{{ __('cancel') }}</x-danger-button>
-                        <x-primary-button type="submit">{{ __('edit_status') }}</x-primary-button>
+                        <x-primary-button type="submit">{{ __('Edit Status') }}</x-primary-button>
 
                     </div>
                 </div>
@@ -90,7 +90,7 @@
                 @method('DELETE')
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
                     <h2 class="text-lg font-semibold mb-4">{{ __('confirm_deletion') }}</h2>
-                    <x-input-label class="text-xl">{{ __('are_you_sure') }} <span class="font-bold"></span>?</x-input-label>
+                    <x-input-label class="text-xl">{{ __('Are you sure') }} <span class="font-bold"></span>?</x-input-label>
 
                     <input type="hidden" name="status_id" id="status_id">
 
@@ -105,10 +105,10 @@
                   class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                 @csrf
                 <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-48  z-30">
-                    <h2 class="text-lg font-semibold mb-4">{{ __('add_new_status') }}</h2>
+                    <h2 class="text-lg font-semibold mb-4">{{ __('Add New Status') }}</h2>
 
                     <div class="mb-4">
-                        <x-input-label required>{{ __('status_name') }}:</x-input-label>
+                        <x-input-label required>{{ __('Status Name') }}:</x-input-label>
                         <x-text-input class="w-full" type="text" name="name" required/>
                     </div>
 
@@ -117,7 +117,7 @@
                         <select name="status"
                                 class="w-full border-black focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm"
                                 required>
-                            <option value="">{{ __('select_status') }}</option>
+                            <option value="">{{ __('Select Status') }}</option>
                             <option value="enable">{{ __('enable') }}</option>
                             <option value="disable">{{ __('disable') }}</option>
                         </select>
@@ -125,7 +125,7 @@
 
                     <div class="flex justify-end gap-4">
                         <x-danger-button type="button" id="cancelAddStatus">{{ __('cancel') }}</x-danger-button>
-                        <x-primary-button type="submit">{{ __('add_status') }}</x-primary-button>
+                        <x-primary-button type="submit">{{ __('Add Status') }}</x-primary-button>
                     </div>
                 </div>
             </form>

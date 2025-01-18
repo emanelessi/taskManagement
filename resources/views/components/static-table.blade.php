@@ -3,7 +3,7 @@
         <thead class="bg-button  border-b border-quaternary">
         <tr>
             @foreach($headers as $header)
-                <th class="px-6 py-3 text-left text-sm font-medium text-secondary uppercase tracking-wider">
+                <th class="px-6 py-3 text-start text-sm font-medium text-secondary uppercase tracking-wider">
                     {{ $header }}
                 </th>
             @endforeach

@@ -30,7 +30,7 @@
             <div class="bg-gradient-to-r from-bg-component to-bg-secondary  p-6 rounded-lg mb-6 shadow-inner">
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <div class="flex items-center gap-2">
-                        <p class="text-text font-bold text-lg">{{ __('Project:') }}</p>
+                        <p class="text-text font-bold text-lg">{{ __('Project Name:') }}</p>
                         <div class="text-hover  font-medium">{{ $task->project->name ?? 'غير متوفر' }}</div>
                     </div>
                     <div class="flex items-center gap-2">

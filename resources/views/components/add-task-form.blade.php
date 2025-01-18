@@ -2,18 +2,18 @@
       class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
     @csrf
     <div class="bg-component p-6 rounded-lg shadow-lg md:w-5/12 w-8/12 lg:mt-16 md:max-h-[90vh] overflow-y-auto z-30">
-        <h2 class="text-lg font-semibold mb-4">{{ __('add_new_task') }}</h2>
+        <h2 class="text-lg font-semibold mb-4">{{ __('Add New Task') }}</h2>
 
         <div class="mb-4">
-            <x-input-label required>{{ __('task_name') }}</x-input-label>
+            <x-input-label required>{{ __('Task Name') }}</x-input-label>
             <x-text-input class="w-full" type="text" name="title" required></x-text-input>
         </div>
 
         <div class="mb-4">
-            <x-input-label required>{{ __('select_project') }}</x-input-label>
+            <x-input-label required>{{ __('Select Project') }}</x-input-label>
             <select name="project_id" id="project-select"
                     class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
-                <option value="">{{ __('select_project') }}</option>
+                <option value="">{{ __('Select Project') }}</option>
                 @foreach($projects as $project)
                     <option value="{{ $project->id }}">{{ $project->name }}</option>
                 @endforeach
@@ -21,10 +21,10 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label required>{{ __('select_category') }}</x-input-label>
+            <x-input-label required>{{ __('Select Category') }}</x-input-label>
             <select id="category-select" name="category_id"
                     class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
-                <option value="">{{ __('select_category') }}</option>
+                <option value="">{{ __('Select Category') }}</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
@@ -32,10 +32,10 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label required>{{ __('select_status') }}</x-input-label>
+            <x-input-label required>{{ __('Select Status') }}</x-input-label>
             <select name="status_id"
                     class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
-                <option value="">{{ __('select_status') }}</option>
+                <option value="">{{ __('Select Status') }}</option>
                 @foreach($statuses as $status)
                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                 @endforeach
@@ -43,23 +43,23 @@
         </div>
 
         <div class="mb-4">
-            <x-input-label required>{{ __('select_priority') }}</x-input-label>
+            <x-input-label required>{{ __('Select Priority') }}</x-input-label>
             <select name="priority" required
                     class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" >
-                <option value="">{{ __('select_priority') }}</option>
-                <option value="Low">{{ __('low_priority') }}</option>
-                <option value="Medium">{{ __('medium_priority') }}</option>
-                <option value="High">{{ __('high_priority') }}</option>
+                <option value="">{{ __('Select Priority') }}</option>
+                <option value="Low">{{ __('Low Priority') }}</option>
+                <option value="Medium">{{ __('Medium Priority') }}</option>
+                <option value="High">{{ __('High Priority') }}</option>
             </select>
         </div>
 
         <div class="mb-4">
-            <x-input-label required>{{ __('due_date') }}</x-input-label>
+            <x-input-label required>{{ __('Due Date') }}</x-input-label>
             <x-text-input class="w-full" type="date" name="due_date" required></x-text-input>
         </div>
 
         <div class="mb-4">
-            <x-input-label>{{ __('completed_date') }}</x-input-label>
+            <x-input-label>{{ __('Completed Date') }}</x-input-label>
             <x-text-input class="w-full" type="date" name="completed_at"></x-text-input>
         </div>
 
@@ -77,7 +77,7 @@
 
         <div class="flex justify-end gap-4">
             <x-danger-button type="button" id="cancelAddTask">{{ __('cancel') }}</x-danger-button>
-            <x-primary-button>{{ __('add_task') }}</x-primary-button>
+            <x-primary-button>{{ __('Add Task') }}</x-primary-button>
         </div>
     </div>
 </form>

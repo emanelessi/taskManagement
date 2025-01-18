@@ -4,11 +4,11 @@
     @php
         $categoryName = $taskGroup->first()->category->name ?? 'Category';
     @endphp
-    <div class="lg:w-2/4 w-full task-group" data-category-id="{{ $categoryId }}">
+    <div class="lg:w-2/4 mx-2 task-group w-full" data-category-id="{{ $categoryId }}">
         <div class="flex justify-between bg-secondary  p-4 rounded-lg">
-            <div class="flex space-x-2 px-2">
+            <div class="flex  px-2">
                 <h2 class="text-md font-bold text-text">{{ $categoryName }}</h2>
-                <h2 class="text-md font-bold text-hover">{{ $taskGroup->count() }}</h2>
+                <h2 class="text-md font-bold text-hover mx-2">{{ $taskGroup->count() }}</h2>
             </div>
             <div class="flex space-x-2 px-2">
                 <img src="{{ asset('image/icon/dots.svg') }}" alt="dots" width="20"/>

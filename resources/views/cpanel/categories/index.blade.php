@@ -43,7 +43,7 @@
                          >' . __('Edit') . '</a>'
                             : '') .
                          (auth()->user()->can('delete categories', $category)
-                            ? '<a href="#" class="text-red-600 hover:text-red-900 ml-4 delete-category" data-id="' . $category->id . '">' . __('Delete') . '</a>'
+                            ? '<a href="#" class="text-red-600 hover:text-red-900 mx-4 delete-category" data-id="' . $category->id . '">' . __('Delete') . '</a>'
                             : ''),
                     ];
                 }
