@@ -94,7 +94,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/users', [UserController::class, 'store'])->name('users.store');
     Route::get('/users', [UserController::class, 'index'])->name('users');
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
-
+    Route::get('/check-due-tasks', [TaskController::class, 'checkDueTasks']);
+    Route::get('/complete-task', [TaskController::class, 'completeTask']);
+    Route::get('/notifications', [\App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-as-read', [\App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
 });
 
 require __DIR__.'/auth.php';
