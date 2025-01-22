@@ -1,3 +1,5 @@
+@props(['projects','statuses','users','categories'])
+
 <form id="addTaskModal" enctype="multipart/form-data" style="display: none;" method="POST" action="{{ route('tasks.store') }}"
       class="fixed inset-0 overflow-auto flex items-center justify-center bg-black bg-opacity-50">
     @csrf
@@ -54,6 +56,17 @@
         </div>
 
         <div class="mb-4">
+            <x-input-label required>{{ __('Assign To') }}</x-input-label>
+            <select name="assigned_to" id="user-select"
+                    class="w-full p-2 border border-secondary/30 rounded focus:outline-none focus:ring-2 focus:ring-tertiary" required>
+                <option value="">{{ __('Select User') }}</option>
+                @foreach($users as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-4">
             <x-input-label required>{{ __('Due Date') }}</x-input-label>
             <x-text-input class="w-full" type="date" name="due_date" required></x-text-input>
         </div>
@@ -89,14 +102,17 @@
         const cancelAddTask = document.querySelector('#cancelAddTask');
         const projectSelect = document.querySelector('#project-select');
         const categorySelect = document.querySelector('#category-select');
-
+        const userSelect = document.querySelector('#user-select');
+        console.log(projectSelect, categorySelect, userSelect);
         addTaskBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const projectId = btn.getAttribute('data-project-id');
                 const categoryId = btn.getAttribute('data-category-id');
+                const userId = btn.getAttribute('data-user-id');
 
                 projectSelect.value = projectId || '';
                 categorySelect.value = categoryId || '';
+                userSelect.value = userId || '';
                 addTaskModal.style.display = 'flex';
             });
         });

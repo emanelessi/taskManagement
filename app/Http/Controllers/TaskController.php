@@ -8,7 +8,11 @@ use App\Models\Project;
 use App\Models\Status;
 use App\Models\Task;
 use App\Models\User;
+use App\Notifications\TaskAssigned;
+use App\Notifications\TaskCompleted;
+use App\Notifications\TaskDue;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TaskController extends Controller
@@ -25,12 +29,12 @@ class TaskController extends Controller
         $this->authorize('viewAny', Task::class);
         $user = auth()->user();
         $projects = Project::all();
-        $categories = Category::where('status','enable')->get();
-        $statuses = Status::where('status','enable')->get();
+        $categories = Category::where('status', 'enable')->get();
+        $statuses = Status::where('status', 'enable')->get();
+        $users = User::all();
         $tasksQuery = Task::with(['project', 'comments', 'attachments', 'user', 'category', 'status']);
         $query = $request->input('search');
 
-        // Adjust the query for tasks
         if ($user->hasRole('administrator')) {
             $tasks = $tasksQuery->where('title', 'like', "%$query%")
                 ->orWhereHas('project', function ($q) use ($query) {
@@ -47,8 +51,9 @@ class TaskController extends Controller
                 ->orWhere('priority', 'like', "%$query%")
                 ->orWhere('description', 'like', "%$query%")
                 ->paginate(10);
-        }else {
-            $tasks = $tasksQuery->where('assigned_to', $user->id)->where(function($q) use ($query) {
+        }
+        else {
+            $tasks = $tasksQuery->where('assigned_to', $user->id)->where(function ($q) use ($query) {
                 $q->where('title', 'like', "%$query%")
                     ->orWhereHas('project', function ($q) use ($query) {
                         $q->where('name', 'like', "%$query%");
@@ -64,11 +69,9 @@ class TaskController extends Controller
                     })
                     ->orWhere('priority', 'like', "%$query%")
                     ->orWhere('description', 'like', "%$query%");
-            }) ->paginate(10);
-            }
-
+            })->paginate(10);
+        }
         $task = null;
-
         foreach ($tasks as $t) {
             $t->first_image_attachment = $t->attachments->isNotEmpty()
                 ? $t->attachments->first(function ($attachment) {
@@ -83,19 +86,18 @@ class TaskController extends Controller
             'categories' => $categories,
             'statuses' => $statuses,
             'task' => $task,
+            'users' => $users,
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+
     public function store(Request $request)
     {
         $this->authorize('create', Task::class);
-
         $request->validate([
             'title' => 'required|string|max:255',
             'attachments' => 'nullable|array',
+            'assigned_to' => 'required|exists:users,id',
             'attachments.*' => 'file|mimes:jpeg,png,jpg,pdf|max:10240',
         ]);
         try {
@@ -108,7 +110,7 @@ class TaskController extends Controller
                 'status_id' => $request->status_id,
                 'project_id' => $request->project_id,
                 'completed_at' => $request->completed_at,
-                'assigned_to' => $request->user()->id,
+                'assigned_to' => $request->assigned_to,
             ]);
             if ($request->hasFile('attachments')) {
                 foreach ($request->file('attachments') as $file) {
@@ -119,6 +121,13 @@ class TaskController extends Controller
                         'uploaded_by' => $request->user()->id,
                     ]);
                 }
+            }
+            $assignedUser = User::find($request->assigned_to);
+            if ($assignedUser === null) {
+                return redirect()->back()->withErrors(['msg' => 'Assigned user not found']);
+            }
+            if ($assignedUser) {
+                $assignedUser->notify(new TaskAssigned($task));
             }
             return redirect()->back()->with('success', 'Task added successfully!');
         } catch (\Exception $e) {
@@ -136,8 +145,8 @@ class TaskController extends Controller
         $project = Project::all();
         $attachment = $task->attachments;
         $comments = $task->comments;
-        $category = Category::where('status','enable')->get();
-        $status = Status::where('status','enable')->get();
+        $category = Category::where('status', 'enable')->get();
+        $status = Status::where('status', 'enable')->get();
         $user = User::all();
         return view('cpanel.tasks.taskDetails', compact('task', 'comments', 'attachment', 'category', 'project', 'status', 'user'));
     }
@@ -217,9 +226,11 @@ class TaskController extends Controller
         $this->authorize('viewAny', Task::class);
 
         $projects = Project::all();
+        $users = User::all();
+
         $project = Project::findOrFail($projectId);
-        $categories = Category::where('status','enable')->get();
-        $statuses = Status::where('status','enable')->get();
+        $categories = Category::where('status', 'enable')->get();
+        $statuses = Status::where('status', 'enable')->get();
 
         $tasks = Task::with(['project', 'comments', 'user', 'category', 'status'])
             ->where('project_id', $projectId)
@@ -232,6 +243,7 @@ class TaskController extends Controller
             'project' => $project,
             'categories' => $categories,
             'statuses' => $statuses,
+            'users' => $users,
             'selectedProjectId' => $projectId,
         ]);
     }
@@ -306,5 +318,26 @@ class TaskController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['msg' => $e->getMessage()]);
         }
+    }
+
+    public function checkDueTasks()
+    {
+        $tasks = Task::where('due_date', '<=', Carbon::now()->addDay())->get();
+
+        foreach ($tasks as $task) {
+            $user = User::find($task->assigned_to);
+            $user->notify(new TaskDue($task));
+        }
+
+        return response()->json(['message' => 'Due tasks checked and notifications sent.']);
+    }
+
+    public function completeTask($taskId)
+    {
+        $task = Task::find($taskId);
+        $task->update(['completed_at' => now()]);
+
+        $user = User::find($task->assigned_to);
+        $user->notify(new TaskCompleted($task));
     }
 }

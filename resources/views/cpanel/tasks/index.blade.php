@@ -75,7 +75,9 @@
             <div class="mt-4">
                 {{  $tasks->links() }}
             </div>
-            <x-add-task-form :projects="$projects" :categories="$categories" :statuses="$statuses" />
+
+{{--            <?php  dd($users) ?>--}}
+            <x-add-task-form :projects="$projects" :categories="$categories" :statuses="$statuses" :users="$users"/>
             <x-edit-task-form :task="$task" :projects="$projects" :categories="$categories" :statuses="$statuses" />
             <x-delete-task-form :task="$task" />
         </div>

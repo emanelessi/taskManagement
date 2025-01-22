@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <x-add-task-form :projects="$projects" :categories="$categories" :statuses="$statuses"/>
+            <x-add-task-form :projects="$projects" :categories="$categories" :statuses="$statuses" :users="$users"/>
             {{-- <x-edit-task-form :task="$tasks" :projects="$projects" :categories="$categories" :statuses="$statuses"/> --}}
             {{-- <x-delete-task-form :task="$tasks"/> --}}
             <x-add-category-form/>

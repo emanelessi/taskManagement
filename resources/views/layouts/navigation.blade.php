@@ -8,6 +8,13 @@
                     </a>
                 </div>
             </div>
+{{--<div class="flex">--}}
+{{--                <div class="shrink-0 flex items-center">--}}
+{{--                    <a href="{{ route('notifications') }}">--}}
+{{--                        <p>fffffffff</p>--}}
+{{--                    </a>--}}
+{{--                </div>--}}
+{{--            </div>--}}
 
             <div class="flex">
                 <div class="hidden sm:flex sm:items-center sm:ms-6">
