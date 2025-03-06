@@ -83,7 +83,6 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/tasks/{task}/update-category', [TaskController::class, 'updateCategory']);
 
-
     Route::get('/project-report', [ProjectController::class, 'projectReport'])->name('project.report');
     Route::post('/project-pdf', [ProjectController::class, 'projectPdf'])->name('project.pdf');
 
@@ -97,8 +96,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::get('/check-due-tasks', [TaskController::class, 'checkDueTasks']);
     Route::get('/complete-task', [TaskController::class, 'completeTask']);
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications');
     Route::post('/notifications/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+
 });
 
 require __DIR__.'/auth.php';

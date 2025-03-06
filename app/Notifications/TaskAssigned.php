@@ -18,7 +18,6 @@ class TaskAssigned extends Notification
     /**
      * Create a new notification instance.
      */
-
     public function __construct($task)
     {
         $this->task = $task;
@@ -32,8 +31,8 @@ class TaskAssigned extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'New Task Assigned',
-            'body' => 'You have been assigned a new task: ' . $this->task->title,
+            'title' => __('New Task Assigned'),
+            'body' => __('You have been assigned a new task: ') . $this->task->title,
             'url' => url('/tasks/' . $this->task->id),
         ];
     }
@@ -41,17 +40,17 @@ class TaskAssigned extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->line('You have been assigned a new task: ' . $this->task->title)
+            ->line(__('You have been assigned a new task: ') . $this->task->title)
             ->action('View Task', url('/tasks/' . $this->task->id))
-            ->line('Thank you for using our application!');
+            ->line(__('Thank you for using our application!'));
     }
 
     public function toWebPush($notifiable, $notification)
     {
         return (new WebPushMessage)
-            ->title('New Task Assigned')
+            ->title(__('New Task Assigned'))
             ->icon('/notification-icon.png')
-            ->body('You have been assigned a new task: ' . $this->task->title)
+            ->body(__('You have been assigned a new task: ') . $this->task->title)
             ->action('View Task', 'view_task')
             ->data(['url' => url('/tasks/' . $this->task->id)]);
     }

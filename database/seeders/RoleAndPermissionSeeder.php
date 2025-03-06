@@ -18,7 +18,6 @@ class RoleAndPermissionSeeder extends Seeder
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // إنشاء الصلاحيات
         $permissions = [
             'view dashboard',
             'view reports',
@@ -54,17 +53,14 @@ class RoleAndPermissionSeeder extends Seeder
             'manage settings',
         ];
 
-        // إنشاء الصلاحيات
         foreach ($permissions as $permission) {
             Permission::create(['name' => $permission]);
         }
 
-        // إنشاء الأدوار
         Role::create(['name' => 'administrator']);
         Role::create(['name' => 'project manager']);
         Role::create(['name' => 'team member']);
 
-        // إعطاء الصلاحيات للأدوار
         $administrator = Role::findByName('administrator');
         $administrator->givePermissionTo(Permission::all());
         $adminUser =  User::where('email', 'admin@admin.com')->first();
@@ -91,10 +87,8 @@ class RoleAndPermissionSeeder extends Seeder
             'view project report',
             'view task report',
         ]);
-        // جلب جميع المستخدمين الذين يطابقون أحد العناوين
         $teamUsers = User::whereIn('email', ['member1@admin.com', 'member2@admin.com', 'member3@admin.com', 'member4@admin.com'])->get();
 
-// تعيين دور "team member" لكل المستخدمين
         foreach ($teamUsers as $teamUser) {
             $teamUser->assignRole('team member');
         }

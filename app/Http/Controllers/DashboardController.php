@@ -68,7 +68,7 @@ class DashboardController extends Controller
             : ($newProjectsThisWeek - $newProjectsLastWeek)." " . __("less");
 
         return view('cpanel.dashboard', compact(
-            'chart', 'cost',
+            'chart', 'cost' ,
             'completedTasksThisWeek', 'completedTasksLastWeek', 'taskDifferenceText',
             'newTasksThisWeek', 'newTaskDifferenceText',
             'newProjectsThisWeek', 'newProjectDifferenceText'

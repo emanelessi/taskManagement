@@ -19,14 +19,6 @@
             <h1 class="text-2xl font-bold mb-4 capitalize text-text">
                 {{ __(str_replace('.', ' ', Route::currentRouteName())) }}
             </h1>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('notifications.index') }}">
-                    Notifications
-                    @if (auth()->user()->unreadNotifications->count())
-                        <span class="badge badge-danger">{{ auth()->user()->unreadNotifications->count() }}</span>
-                    @endif
-                </a>
-            </li>
             {{ $slot }}
         </main>
     </div>

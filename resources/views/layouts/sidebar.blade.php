@@ -111,6 +111,16 @@
                     </a>
                 </x-nav-link>
             @endcan
+            <x-nav-link class="flex items-center" @click="activeTab = 'notifications'">
+                <a href="{{ route('notifications') }}"
+                   class="flex items-center gap-3 py-3 px-5 rounded-md transition-all duration-200 ease-in-out relative z-10"
+                   :class="activeTab === 'notifications' ? 'bg-tertiary text-white shadow-md' : 'text-text hover:bg-tertiary hover:text-white hover:shadow-lg'">
+                    <div class="rounded-lg w-8 h-8 flex justify-center items-center bg-tertiary shadow-md">
+                        <img src="{{ asset('image/icon/notification.svg') }}" alt="notifications" width="15"/>
+                    </div>
+                    <span>{{ __('Notifications') }}</span>
+                </a>
+            </x-nav-link>
 
             @can('manage settings')
                 <x-nav-link class="flex items-center" @click="activeTab = 'profile.edit'">

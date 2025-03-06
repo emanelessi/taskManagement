@@ -14,6 +14,7 @@ use App\Notifications\TaskDue;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class TaskController extends Controller
 {
@@ -126,8 +127,9 @@ class TaskController extends Controller
             if ($assignedUser === null) {
                 return redirect()->back()->withErrors(['msg' => 'Assigned user not found']);
             }
+
             if ($assignedUser) {
-                $assignedUser->notify(new TaskAssigned($task));
+                Notification::send($assignedUser, new TaskAssigned($task));
             }
             return redirect()->back()->with('success', 'Task added successfully!');
         } catch (\Exception $e) {

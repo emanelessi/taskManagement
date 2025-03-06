@@ -9,12 +9,9 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Auth::user()->notifications;
-        \Log::info($notifications);
-        return view('notifications.index', compact('notifications'));
+        $notifications = Auth::user()->notifications()->paginate(10); // جلب 10 إشعارات لكل صفحة
+        return view('cpanel.notifications.index', compact('notifications'));
     }
-
-    // تعليم الإشعارات كمقروءة
     public function markAsRead(Request $request)
     {
         Auth::user()->unreadNotifications->markAsRead();
